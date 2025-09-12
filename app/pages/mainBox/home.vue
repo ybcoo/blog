@@ -74,17 +74,17 @@
                 : 'smallTitle_moon'
             "
           >
-            {{ "15 of 1,222 posts" }}
+            {{ `${showRecord} of ${total} posts` }}
           </span>
-          <div style="margin-left: 20px">
-            <span><</span>
-            <span>></span>
+          <div class="arrow">
+            <div class="leftArrow" @click="handleLeftArrow" :style="{'--arrowHover':themeStore.hovorColor}" :class="themeStore.theme.label==='light'?'arrowColor_sun':'arrowColor_moon'"><</div>
+            <div class="rightArrow" @click="handleRightArrow" :style="{'--arrowHover':themeStore.hovorColor}" :class="themeStore.theme.label==='light'?'arrowColor_sun':'arrowColor_moon'">></div>
           </div>
         </div>
       </div>
       <div class="pageBody" style="margin-bottom: 20px">
         <div
-          v-for="(item, index) in pageList"
+          v-for="(item, index) in showList"
           :key="index"
           class="hovorDiv"
           :style="{ '--hovorColor': themeStore.hovorColor }"
@@ -131,7 +131,20 @@
 <script setup>
 import { useThemeStore } from "~~/stores/theme";
 const themeStore = useThemeStore();
+const leftDisabled = ref(true);
+const rightDisabled = ref(false);
+const currentPage = ref(1);
+const pageSize = ref(5);
+const total = ref(0);
+const totalPage = ref(0);
+const showRecord = ref(0);
 const pageList = ref([
+  {
+    title: "My First Webpage Project",
+    date: "2023-08-01",
+    content:
+      "This is my first webpage project using HTML, CSS, and JavaScript. I learned a lot about web development and had fun creating it!",
+  },
   {
     title: "My First Webpage Project",
     date: "2023-08-01",
@@ -144,6 +157,54 @@ const pageList = ref([
     content:
       "In this project, I built a modern web application using Nuxt.js. It was exciting to work with server-side rendering and static site generation.",
   },
+  {
+    title: "My First Webpage Project",
+    date: "2023-08-01",
+    content:
+      "This is my first webpage project using HTML, CSS, and JavaScript. I learned a lot about web development and had fun creating it!",
+  },
+  {
+    title: "Exploring Nuxt.js for Modern Web Apps",
+    date: "2024-01-15",
+    content:
+      "In this project, I built a modern web application using Nuxt.js. It was exciting to work with server-side rendering and static site generation.",
+  },
+  {
+    title: "My First Webpage Project",
+    date: "2023-08-01",
+    content:
+      "This is my first webpage project using HTML, CSS, and JavaScript. I learned a lot about web development and had fun creating it!",
+  },
+  {
+    title: "Exploring Nuxt.js for Modern Web Apps",
+    date: "2024-01-15",
+    content:
+      "In this project, I built a modern web application using Nuxt.js. It was exciting to work with server-side rendering and static site generation.",
+  },
+  {
+    title: "My First Webpage Project",
+    date: "2023-08-01",
+    content:
+      "This is my first webpage project using HTML, CSS, and JavaScript. I learned a lot about web development and had fun creating it!",
+  },
+  {
+    title: "Exploring Nuxt.js for Modern Web Apps",
+    date: "2024-01-15",
+    content:
+      "In this project, I built a modern web application using Nuxt.js. It was exciting to work with server-side rendering and static site generation.",
+  },
+  {
+    title: "My First Webpage Project",
+    date: "2023-08-01",
+    content:
+      "This is my first webpage project using HTML, CSS, and JavaScript. I learned a lot about web development and had fun creating it!",
+  },
+  {
+    title: "Exploring Nuxt.js for Modern Web Apps",
+    date: "2024-01-15",
+    content:
+      "In this project, I built a modern web application using Nuxt.js. It was exciting to work with server-side rendering and static site generation.",
+  }
 ]);
 const textList = ref([
   "Hello! I'm Yu Bingcao, a passionate coding enthusiast.",
@@ -158,12 +219,39 @@ const moreLines = [
   "Once optimized a loop to reduce runtime by 90%",
   "Taught myself Assembly to hack old game consoles",
 ];
+const showList=ref([])
+const getPageSettings = () => {
+  total.value = pageList.value.length;
+  totalPage.value = Math.ceil(total.value / pageSize.value);
+  showRecord.value = Math.min(pageSize.value, total.value);
+  showList.value=pageList.value.slice(0,showRecord.value);
+};
+getPageSettings();
+const handleLeftArrow = () => {
+  if(currentPage.value==1){
+    leftDisabled.value=true;
+    return;
+  }
+  rightDisabled.value=false;
+  currentPage.value--;
+  showList.value=pageList.value.slice((currentPage.value-1)*pageSize.value,currentPage.value*pageSize.value);
+  showRecord.value=currentPage.value*pageSize.value;
+};
+const handleRightArrow = () => {
+  if(currentPage.value==totalPage.value){
+    rightDisabled.value=true;
+    return;
+  }
+  leftDisabled.value=false;
+  currentPage.value++;
+  showList.value=pageList.value.slice((currentPage.value-1)*pageSize.value,Math.min(currentPage.value*pageSize.value,total.value));
+  showRecord.value=Math.min(currentPage.value*pageSize.value,total.value);
+};
 const lineHeight = ref(30);
 const isScrolling = ref(false);
 let moreIndex = 0;
 // 新增：控制“当前哪一行正在滚动”的索引
 const currentScrollIndex = ref(-1);
-
 // 核心改：逐行触发动画，而非容器整体动
 const scrollUp = async () => {
   if (isScrolling.value) return;
@@ -174,8 +262,6 @@ const scrollUp = async () => {
     currentScrollIndex.value = i; // 标记当前滚动行
     await new Promise((resolve) => setTimeout(resolve, 150)); // 每行间隔150ms，更有节奏感
   }
-
-  // 2. 所有行动画结束后，更新数据（删首行、加新行）
   textList.value.shift();
   textList.value.push(moreLines[moreIndex]);
   moreIndex = (moreIndex + 1) % moreLines.length;
@@ -186,6 +272,41 @@ const scrollUp = async () => {
 };
 </script>
 <style lang="scss" scoped>
+.arrow{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 20px;
+}
+.leftArrow{
+  font-weight: 400;
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover{
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: var(--arrowHover);
+  }
+}
+.rightArrow{
+  font-weight: 400;
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &:hover{
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: var(--arrowHover);
+  }
+}
 .page {
   // position: relative;
   border: 2px solid;
