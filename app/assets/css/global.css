@@ -43,3 +43,22 @@ html, body {
 .arrowColor_moon{
   color: #8a9588;
 }
+.disabled_sun{
+  color: #d0cbc5;
+  &:hover {
+    cursor: default !important; 
+    background-color: transparent !important; /* 取消hover背景 */
+  }
+}
+.disabled_moon{
+  color: #384227;
+  &:hover {
+    cursor: default !important; 
+    background-color: transparent !important; /* 取消hover背景 */
+  }
+}
+.flexCenter{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

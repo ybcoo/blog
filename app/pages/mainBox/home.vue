@@ -53,7 +53,12 @@
         </div>
       </div>
     </article>
-    <section class="page" :style="{borderColor: themeStore.theme.label === 'light' ? '#eee9e4' : '#232b1c'}">
+    <section
+      class="page"
+      :style="{
+        borderColor: themeStore.theme.label === 'light' ? '#eee9e4' : '#232b1c',
+      }"
+    >
       <div class="pageHeader">
         <span
           class="title"
@@ -77,8 +82,22 @@
             {{ `${showRecord} of ${total} posts` }}
           </span>
           <div class="arrow">
-            <div class="leftArrow" @click="handleLeftArrow" :style="{'--arrowHover':themeStore.hovorColor}" :class="themeStore.theme.label==='light'?'arrowColor_sun':'arrowColor_moon'"><</div>
-            <div class="rightArrow" @click="handleRightArrow" :style="{'--arrowHover':themeStore.hovorColor}" :class="themeStore.theme.label==='light'?'arrowColor_sun':'arrowColor_moon'">></div>
+            <div
+              class="leftArrow"
+              @click="handleLeftArrow"
+              :style="{ '--arrowHover': themeStore.hovorColor }"
+              :class="leftArrowStyle"
+            >
+              <
+            </div>
+            <div
+              class="rightArrow"
+              @click="handleRightArrow"
+              :style="{ '--arrowHover': themeStore.hovorColor }"
+              :class="rightArrowStyle"
+            >
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -124,8 +143,44 @@
           >
         </div>
       </div>
+      <div class="pageFooter" style="margin-bottom: 20px">
+        <div class="arrow">
+          <div
+            class="leftArrow"
+            @click="handleLeftArrow"
+            :style="{ '--arrowHover': themeStore.hovorColor }"
+            :class="leftArrowStyle"
+          >
+            <
+          </div>
+          <span
+            style="font-weight: 800"
+            :class="
+              themeStore.theme.label === 'light'
+                ? 'smallTitle_sun'
+                : 'smallTitle_moon'
+            "
+          >
+            {{ `${showRecord} of ${total} posts` }}
+          </span>
+          <div
+            class="rightArrow"
+            @click="handleRightArrow"
+            :style="{ '--arrowHover': themeStore.hovorColor }"
+            :class="rightArrowStyle"
+          >
+            >
+          </div>
+        </div>
+      </div>
     </section>
-    <div>111</div>
+    <section class="footer flexCenter" >
+      <span
+        style="font-size: 14px;margin-top: 20px;"
+        :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'"
+        >Designed by Yu BingCao(Klein) in 2025 years · comment</span
+      >
+    </section>
   </main>
 </template>
 <script setup>
@@ -204,7 +259,7 @@ const pageList = ref([
     date: "2024-01-15",
     content:
       "In this project, I built a modern web application using Nuxt.js. It was exciting to work with server-side rendering and static site generation.",
-  }
+  },
 ]);
 const textList = ref([
   "Hello! I'm Yu Bingcao, a passionate coding enthusiast.",
@@ -219,33 +274,71 @@ const moreLines = [
   "Once optimized a loop to reduce runtime by 90%",
   "Taught myself Assembly to hack old game consoles",
 ];
-const showList=ref([])
+const leftArrowStyle = computed(() => {
+  if (themeStore.theme.label == "light") {
+    return {
+      arrowColor_sun: !leftDisabled.value,
+      disabled_sun: leftDisabled.value,
+    };
+  } else {
+    return {
+      arrowColor_moon: !leftDisabled.value,
+      disabled_moon: leftDisabled.value,
+    };
+  }
+});
+const rightArrowStyle = computed(() => {
+  if (themeStore.theme.label == "light") {
+    return {
+      arrowColor_sun: !rightDisabled.value,
+      disabled_sun: rightDisabled.value,
+    };
+  } else {
+    return {
+      arrowColor_moon: !rightDisabled.value,
+      disabled_moon: rightDisabled.value,
+    };
+  }
+});
+const showList = ref([]);
 const getPageSettings = () => {
   total.value = pageList.value.length;
   totalPage.value = Math.ceil(total.value / pageSize.value);
   showRecord.value = Math.min(pageSize.value, total.value);
-  showList.value=pageList.value.slice(0,showRecord.value);
+  showList.value = pageList.value.slice(0, showRecord.value);
 };
 getPageSettings();
 const handleLeftArrow = () => {
-  if(currentPage.value==1){
-    leftDisabled.value=true;
+  if (currentPage.value == 1) {
+    leftDisabled.value = true;
     return;
   }
-  rightDisabled.value=false;
+  rightDisabled.value = false;
   currentPage.value--;
-  showList.value=pageList.value.slice((currentPage.value-1)*pageSize.value,currentPage.value*pageSize.value);
-  showRecord.value=currentPage.value*pageSize.value;
+  if (currentPage.value == 1) {
+    leftDisabled.value = true;
+  }
+  showList.value = pageList.value.slice(
+    (currentPage.value - 1) * pageSize.value,
+    currentPage.value * pageSize.value
+  );
+  showRecord.value = currentPage.value * pageSize.value;
 };
 const handleRightArrow = () => {
-  if(currentPage.value==totalPage.value){
-    rightDisabled.value=true;
+  if (currentPage.value == totalPage.value) {
+    rightDisabled.value = true;
     return;
   }
-  leftDisabled.value=false;
+  leftDisabled.value = false;
   currentPage.value++;
-  showList.value=pageList.value.slice((currentPage.value-1)*pageSize.value,Math.min(currentPage.value*pageSize.value,total.value));
-  showRecord.value=Math.min(currentPage.value*pageSize.value,total.value);
+  if (currentPage.value == totalPage.value) {
+    rightDisabled.value = true;
+  }
+  showList.value = pageList.value.slice(
+    (currentPage.value - 1) * pageSize.value,
+    Math.min(currentPage.value * pageSize.value, total.value)
+  );
+  showRecord.value = Math.min(currentPage.value * pageSize.value, total.value);
 };
 const lineHeight = ref(30);
 const isScrolling = ref(false);
@@ -272,14 +365,14 @@ const scrollUp = async () => {
 };
 </script>
 <style lang="scss" scoped>
-.arrow{
+.arrow {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
   margin-left: 20px;
 }
-.leftArrow{
+.leftArrow {
   font-weight: 400;
   font-size: 20px;
   width: 40px;
@@ -287,13 +380,13 @@ const scrollUp = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  &:hover{
+  &:hover {
     cursor: pointer;
     border-radius: 50%;
     background-color: var(--arrowHover);
   }
 }
-.rightArrow{
+.rightArrow {
   font-weight: 400;
   font-size: 20px;
   width: 40px;
@@ -301,7 +394,7 @@ const scrollUp = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  &:hover{
+  &:hover {
     cursor: pointer;
     border-radius: 50%;
     background-color: var(--arrowHover);
