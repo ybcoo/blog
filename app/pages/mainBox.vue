@@ -2,6 +2,9 @@
   <main class="layout" :style="{ backgroundColor: themeStore.theme.color }">
     <!-- 1. 小屏幕时显示顶部水平导航 -->
     <div class="top-nav" :style="{ '--hover-bg': hovorColor }">
+      <section>
+        
+      </section>
       <NuxtLink class="icon-container" :style="{ backgroundColor: active === 'home' ? 'white' : '' }"
         @click="changeActive('home')" to="/mainBox/home">
         <img class="icon" :src="changeImg(homePic)" alt="home" />
@@ -18,6 +21,10 @@
         <img class="icon" :src="themeImg" alt="theme" />
         <span v-if="showRipple" class="ripple-effect" :style="rippleStyle"></span>
       </button>
+      <section class="flexCenter center"
+        :style="{  right: 0, top: 0, border: 'none', outline: 'none', padding: 0, width: '50px', height: '50px', cursor: 'pointer' }">
+        <img class="icon " :src="changeImg(managePic)" alt="manage" />
+      </section>
     </div>
     <aside class="sidebar">
       <nav class="navContainer">
@@ -44,10 +51,13 @@
     <section class="content">
       <NuxtPage />
     </section>
+    <section class="manage flexCenter center" :style="{ position: 'absolute', right: 0, top: 0 }">
+      <img class="icon " :src="changeImg(managePic)" alt="manage" />
+    </section>
   </main>
 </template>
 <script setup>
-import { homePic, aboutPic, sharePic, themePic } from "~/composables/theme";
+import { homePic, aboutPic, sharePic, themePic, managePic } from "~/composables/theme";
 import { useThemeStore } from "~~/stores/theme";
 const themeStore = useThemeStore();
 const isDisabled = ref(false);
@@ -151,7 +161,6 @@ const changeImg = (img) => {
   width: 100%;
   height: 60px;
   background-color: inherit; // 继承主题背景色
-  z-index: 100; // 确保在内容上方
   align-items: center;
   justify-content: center;
   gap: 16px; // 导航项间距
@@ -159,6 +168,7 @@ const changeImg = (img) => {
   // 小屏幕显示顶部导航
   @media (max-width: 768px) {
     display: flex;
+    
   }
 }
 
@@ -169,8 +179,10 @@ const changeImg = (img) => {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  position: relative;
   flex-wrap: wrap;
   overflow: hidden;
+
   @media (max-width: 768px) {
     flex-direction: column;
     justify-content: flex-start;
@@ -188,6 +200,7 @@ const changeImg = (img) => {
   justify-content: center;
   transition: transform 0.3s ease, opacity 0.3s ease; // 侧边栏动画
   padding-top: 200px;
+
   @media (max-width: 768px) {
     display: none;
   }
@@ -199,9 +212,9 @@ const changeImg = (img) => {
   display: flex;
   justify-content: center;
   padding-right: 20%;
-  align-items: stretch; 
-  overflow-y: hidden; 
-  
+  align-items: stretch;
+  overflow-y: hidden;
+
 
   @media (max-width: 768px) {
     width: 100%;
@@ -230,6 +243,31 @@ const changeImg = (img) => {
   width: 20px;
   height: 20px;
   vertical-align: middle;
+}
+
+.manage {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+.center {
+  /* 动画过渡：与其他元素保持一致的曲线和时长 */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  // 悬停效果：向下位移3px + 放大1.1倍 + 阴影增强层次感
+  &:hover {
+    transform: translateY(3px) scale(1.1); // translateY(3px)向下，scale(1.1)放大10%
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
+  }
+
+  // 图片同步动画（可选，让图标放大更协调）
+  &:hover .icon {
+    transform: scale(1.2); // 图标额外放大一点，增强视觉反馈
+  }
 }
 
 .icon-container {
