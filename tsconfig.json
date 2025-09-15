@@ -1,18 +1,36 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
-  "files": [],
-  "references": [
-    {
-      "path": "./.nuxt/tsconfig.app.json"
-    },
-    {
-      "path": "./.nuxt/tsconfig.server.json"
-    },
-    {
-      "path": "./.nuxt/tsconfig.shared.json"
-    },
-    {
-      "path": "./.nuxt/tsconfig.node.json"
+  "extends": "./.nuxt/tsconfig.json", // 核心配置：继承 Nuxt 自动生成的配置 :cite[5]
+  "compilerOptions": {
+    // 如果你的类型定义文件在根目录，且名称不是 'pinia.d.ts' 或者有多个自定义声明文件，
+    // 可以考虑配置 typeRoots (多数情况可能不需要)
+    // "typeRoots": ["./node_modules/@types", "./"], // 添加项目根目录到类型根目录
+
+    // 或者，明确指定要包含的类型定义文件 (更推荐)
+    "types": [
+      "@nuxt/types",
+      "@pinia/nuxt",
+      // 其他你项目依赖的全局类型声明
+    ],
+    
+    // 确保 baseUrl 设置为根目录，这有助于解析非相对模块
+    "baseUrl": ".",
+    // 如果有路径映射别名，也请保留
+    "paths": {
+      "~/*": ["./*"],
+      "@/*": ["./*"]
     }
+  },
+  // 明确包含你的自定义类型定义文件
+  "include": [
+    "pinia.d.ts", // 包含你的 Pinia 类型扩展文件
+    // ... Nuxt 通常会自动包含其他必要的文件，但明确列出它没有坏处
+  ],
+  // 排除不需要编译的目录
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".output",
+    ".nuxt" // 通常不需要直接编译 .nuxt 目录下的文件
   ]
 }

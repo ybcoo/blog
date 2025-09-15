@@ -2,27 +2,27 @@
   <main class="layout" :style="{ backgroundColor: themeStore.theme.color }">
     <!-- 1. 小屏幕时显示顶部水平导航 -->
     <div class="top-nav" :style="{ '--hover-bg': hovorColor }">
-      <section>
-        
+      <section class="flexCenter" style="gap: 16px;width: calc(100% - 50px);">
+        <NuxtLink class="icon-container" :style="{ backgroundColor: active === 'home' ? 'white' : '' }"
+          @click="changeActive('home')" to="/mainBox/home">
+          <img class="icon" :src="changeImg(homePic)" alt="home" />
+        </NuxtLink>
+        <NuxtLink class="icon-container" :style="{ backgroundColor: active === 'about' ? 'white' : '' }"
+          @click="changeActive('about')" to="/mainBox/about">
+          <img class="icon" :src="changeImg(aboutPic)" alt="about" />
+        </NuxtLink>
+        <NuxtLink class="icon-container" :style="{ backgroundColor: active === 'share' ? 'white' : '' }"
+          @click="changeActive('share')" to="/mainBox/share">
+          <img class="icon" :src="changeImg(sharePic)" alt="share" />
+        </NuxtLink>
+        <button class="icon-container" :disabled="isDisabled" @click="toggleThemeWithAnimation">
+          <img class="icon" :src="themeImg" alt="theme" />
+          <span v-if="showRipple" class="ripple-effect" :style="rippleStyle"></span>
+        </button>
       </section>
-      <NuxtLink class="icon-container" :style="{ backgroundColor: active === 'home' ? 'white' : '' }"
-        @click="changeActive('home')" to="/mainBox/home">
-        <img class="icon" :src="changeImg(homePic)" alt="home" />
-      </NuxtLink>
-      <NuxtLink class="icon-container" :style="{ backgroundColor: active === 'about' ? 'white' : '' }"
-        @click="changeActive('about')" to="/mainBox/about">
-        <img class="icon" :src="changeImg(aboutPic)" alt="about" />
-      </NuxtLink>
-      <NuxtLink class="icon-container" :style="{ backgroundColor: active === 'share' ? 'white' : '' }"
-        @click="changeActive('share')" to="/mainBox/share">
-        <img class="icon" :src="changeImg(sharePic)" alt="share" />
-      </NuxtLink>
-      <button class="icon-container" :disabled="isDisabled" @click="toggleThemeWithAnimation">
-        <img class="icon" :src="themeImg" alt="theme" />
-        <span v-if="showRipple" class="ripple-effect" :style="rippleStyle"></span>
-      </button>
-      <section class="flexCenter center"
-        :style="{  right: 0, top: 0, border: 'none', outline: 'none', padding: 0, width: '50px', height: '50px', cursor: 'pointer' }">
+
+      <section class="flexCenter center" @click="handleToManage"
+        :style="{ right: 0, top: 0, border: 'none', outline: 'none', padding: 0, width: '50px', height: '50px', cursor: 'pointer' }">
         <img class="icon " :src="changeImg(managePic)" alt="manage" />
       </section>
     </div>
@@ -51,7 +51,7 @@
     <section class="content">
       <NuxtPage />
     </section>
-    <section class="manage flexCenter center" :style="{ position: 'absolute', right: 0, top: 0 }">
+    <section class="manage flexCenter center" @click="handleToManage" :style="{ position: 'absolute', right: 0, top: 0 }">
       <img class="icon " :src="changeImg(managePic)" alt="manage" />
     </section>
   </main>
@@ -151,6 +151,10 @@ const changeImg = (img) => {
     }
   }
 };
+//跳转后台管理
+const handleToManage=()=>{
+  window.location.href = 'http://localhost:8080'
+}
 </script>
 <style lang="scss" scoped>
 .top-nav {
@@ -158,17 +162,16 @@ const changeImg = (img) => {
   position: fixed; // 固定在顶部
   top: 0;
   left: 0;
-  width: 100%;
+  width: 100%; // 全宽，减去可能的滚动条宽度
   height: 60px;
   background-color: inherit; // 继承主题背景色
   align-items: center;
   justify-content: center;
-  gap: 16px; // 导航项间距
 
   // 小屏幕显示顶部导航
   @media (max-width: 768px) {
     display: flex;
-    
+    padding-left: 50px;
   }
 }
 
@@ -254,6 +257,7 @@ const changeImg = (img) => {
     display: none;
   }
 }
+
 .center {
   /* 动画过渡：与其他元素保持一致的曲线和时长 */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -261,7 +265,6 @@ const changeImg = (img) => {
   // 悬停效果：向下位移3px + 放大1.1倍 + 阴影增强层次感
   &:hover {
     transform: translateY(3px) scale(1.1); // translateY(3px)向下，scale(1.1)放大10%
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
   }
 
   // 图片同步动画（可选，让图标放大更协调）
