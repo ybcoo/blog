@@ -1,6 +1,6 @@
 // stores/theme.ts
 import { defineStore } from 'pinia'
-
+/**@ts-ignore */
 export const useThemeStore = defineStore('theme', {
   // 状态
   state: () => ({

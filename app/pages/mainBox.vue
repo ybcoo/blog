@@ -153,7 +153,7 @@ const changeImg = (img) => {
 };
 //跳转后台管理
 const handleToManage=()=>{
-  window.open('http://localhost:8080','_blank')
+  window.open('http://localhost:5173','_blank')
 }
 </script>
 <style lang="scss" scoped>

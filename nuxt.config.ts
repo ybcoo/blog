@@ -1,6 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { defineNuxtConfig } from 'nuxt/config'
 export default defineNuxtConfig({
+  app: {
+    baseURL: '/blog/',   // 开发、生产统一用 /blog/
+  },
+  nitro: {
+    preset: 'github-pages'
+  },
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: [
