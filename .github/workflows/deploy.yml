@@ -4,11 +4,11 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - master          # 你的默认分支是 master
-  workflow_dispatch:    # 可选：在 Actions 页面手动触发
+      - master
+  workflow_dispatch:
 
 permissions:
-  contents: write       # 允许往 gh-pages 分支推代码
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -27,12 +27,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build
+      - name: Generate static site
+        run: npm run generate         # ✅ 这里用 generate，而不是 build / dev
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          # publish_branch: gh-pages # 默认就是 gh-pages，可以不写
+          publish_dir: ./.output/public   # ✅ Nuxt 静态导出目录
+          # publish_branch: gh-pages       # 用默认 gh-pages 就行

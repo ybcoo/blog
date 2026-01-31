@@ -153,7 +153,7 @@ const changeImg = (img) => {
 };
 //跳转后台管理
 const handleToManage=()=>{
-  window.open('http://localhost:5173','_blank')
+  window.open('https://ybcoo.github.io/blog-manage-ts','_blank')
 }
 </script>
 <style lang="scss" scoped>
