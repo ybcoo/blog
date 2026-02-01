@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { defineNuxtConfig } from 'nuxt/config'
 export default defineNuxtConfig({
-  ssr:false,
+  ssr:false,//服务不够暂时关闭
   app: {
     baseURL: '/blog/',   // 开发、生产统一用 /blog/
   },
