@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { defineNuxtConfig } from 'nuxt/config'
 export default defineNuxtConfig({
+  ssr:false,
   app: {
     baseURL: '/blog/',   // 开发、生产统一用 /blog/
   },
