@@ -15,7 +15,7 @@ export default defineNuxtConfig({
     '@pinia-plugin-persistedstate/nuxt'
   ],
   routeRules: {
-    '/': { redirect: '/blog/mainBox/home' }
+    '/': { redirect: '/mainBox/home' }//开ssr可能要加上blog
   },
   css: ['~/assets/css/global.css'] // 这里的路径是相对于项目根目录的
 })
