@@ -34,6 +34,7 @@
             :class="{
               'scroll-single-line': isScrolling && currentScrollIndex === index,
             }"
+            @click="router.push(`/mainBox/${index}`)"
           >
             {{ line }}
           </p>
@@ -107,6 +108,7 @@
           :key="index"
           class="hovorDiv"
           :style="{ '--hovorColor': themeStore.hovorColor }"
+          @click="router.push(`/mainBox/${index}`)"
         >
           <div
             style="
@@ -185,6 +187,7 @@
 </template>
 <script setup>
 import { useThemeStore } from "~~/stores/theme";
+const router=useRouter()
 const themeStore = useThemeStore();
 const leftDisabled = ref(true);
 const rightDisabled = ref(false);

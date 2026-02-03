@@ -114,6 +114,8 @@ const typeMap: any = {
       color: inherit !important; // 继承外层颜色（比如你主题的颜色）
       font-size: inherit;
       font-weight: inherit;
+      overflow-x: auto; // 防止内容溢出
+      word-break: break-word; // 防止长单词溢出
     }
 
     :deep(a) {
