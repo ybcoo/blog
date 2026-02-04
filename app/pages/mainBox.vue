@@ -3,16 +3,16 @@
     <!-- 1. 小屏幕时显示顶部水平导航 -->
     <div class="top-nav" :style="{ '--hover-bg': hovorColor }">
       <section class="flexCenter" style="gap: 16px;width: calc(100% - 50px);">
-        <NuxtLink class="icon-container" :style="{ backgroundColor: active === 'home' ? 'white' : '' }"
-          @click="changeActive('home')" to="/mainBox/home">
+        <NuxtLink class="icon-container" :style="{ backgroundColor: route.path === '/mainBox/home' ? 'white' : '' }"
+           to="/mainBox/home">
           <img class="icon" :src="changeImg(homePic)" alt="home" />
         </NuxtLink>
-        <NuxtLink class="icon-container" :style="{ backgroundColor: active === 'about' ? 'white' : '' }"
-          @click="changeActive('about')" to="/mainBox/about">
+        <NuxtLink class="icon-container" :style="{ backgroundColor: route.path === '/mainBox/about' ? 'white' : '' }"
+           to="/mainBox/about">
           <img class="icon" :src="changeImg(aboutPic)" alt="about" />
         </NuxtLink>
-        <NuxtLink class="icon-container" :style="{ backgroundColor: active === 'share' ? 'white' : '' }"
-          @click="changeActive('share')" to="/mainBox/share">
+        <NuxtLink class="icon-container" :style="{ backgroundColor: route.path === '/mainBox/share' ? 'white' : '' }"
+           to="/mainBox/share">
           <img class="icon" :src="changeImg(sharePic)" alt="share" />
         </NuxtLink>
         <button class="icon-container" :disabled="isDisabled" @click="toggleThemeWithAnimation">
@@ -29,16 +29,16 @@
     <aside class="sidebar">
       <nav class="navContainer">
         <div class="nav" :style="{ '--hover-bg': hovorColor }">
-          <NuxtLink class="icon-container" :style="{ backgroundColor: active === 'home' ? 'white' : '' }"
-            @click="changeActive('home')" to="/mainBox/home">
+          <NuxtLink class="icon-container" :style="{ backgroundColor: route.path === '/mainBox/home' ? 'white' : '' }"
+             to="/mainBox/home">
             <img class="icon" :src="changeImg(homePic)" alt="home" />
           </NuxtLink>
-          <NuxtLink class="icon-container" :style="{ backgroundColor: active === 'about' ? 'white' : '' }"
-            @click="changeActive('about')" to="/mainBox/about">
+          <NuxtLink class="icon-container" :style="{ backgroundColor: route.path === '/mainBox/about' ? 'white' : '' }"
+             to="/mainBox/about">
             <img class="icon" :src="changeImg(aboutPic)" alt="about" />
           </NuxtLink>
-          <NuxtLink class="icon-container" :style="{ backgroundColor: active === 'share' ? 'white' : '' }"
-            @click="changeActive('share')" to="/mainBox/share">
+          <NuxtLink class="icon-container" :style="{ backgroundColor: route.path === '/mainBox/share' ? 'white' : '' }"
+             to="/mainBox/share">
             <img class="icon" :src="changeImg(sharePic)" alt="share" />
           </NuxtLink>
         </div>
@@ -59,6 +59,7 @@
 <script setup>
 import { homePic, aboutPic, sharePic, themePic, managePic } from "~/composables/theme";
 import { useThemeStore } from "~~/stores/theme";
+const route=useRoute()
 const themeStore = useThemeStore();
 const isDisabled = ref(false);
 // 涟漪加载效果
@@ -119,15 +120,13 @@ const toggleThemeWithAnimation = (event) => {
   }, 500);
 };
 // 主题切换
-const active = computed(() => {
-  return themeStore.active;
-});
+// const active = computed(() => {
+//   return themeStore.active;
+// });
 const hovorColor = computed(() => {
   return themeStore.theme.label == "dark" ? "#1a2510" : "#f2eae1";
 });
-const changeActive = (value) => {
-  themeStore.active = value;
-};
+
 const changeTheme = () => {
   themeStore.theme.label == "light"
     ? (themeStore.theme = { label: "dark", color: "#0f1600" })
@@ -141,7 +140,7 @@ const themeImg = computed(() => {
   }
 });
 const changeImg = (img) => {
-  if (img.label == active.value) {
+  if (img.label == route.name) {
     return img.select;
   } else {
     if (themeStore.theme.label == "light") {

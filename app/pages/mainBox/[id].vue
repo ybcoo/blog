@@ -1,12 +1,13 @@
-x<template>
+<template>
   <div class="detail-container">
     <Preview :form="formItem"></Preview>
-    <Robot />
+    <Robot :formItem="formItem"/>
     </div>
 </template>
 <script setup lang="ts">
 import { onMounted, reactive, ref, watch } from 'vue';
 import Preview from '../../../components/Preview.vue';
+import { getArticle } from '~~/util/api';
 import Robot from '../../../components/Robot.vue';
 interface formType {
   id?: number;
@@ -25,7 +26,26 @@ const resultDefault:any={
       type:'experience',
     }
 const formItem=ref<formType|null>(resultDefault)
-
+const getArticleDetail=async()=>{
+  try{
+    const { data, error } = await getArticle({
+        id: Number(useRoute().params.id),
+        pageNum: 1,
+        pageSize: 1,
+      });
+      if (error.value) {
+        console.error("Failed to fetch articles:", error.value);
+      }
+      const { code, result } = data?.value ?? ({} as any);
+      const { list = [], total: totalNum = 0 } = result || {};
+      if(list.length>0){
+        formItem.value = list[0];
+      }
+  }catch(e){
+    console.error(e)
+  }
+}
+await getArticleDetail()
 // const { data, error } = await getExperienceArticle()
 // watch(()=>data.value,(res)=>{
 //   if(!res)return

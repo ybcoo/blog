@@ -21,6 +21,7 @@
       >
         This is my second webpage project.</span
       >
+      <ClientOnly>
       <div class="scroller-container">
         <!-- 文本列表：v-for 每行都用同一个 class，动态加动画 -->
         <div
@@ -34,12 +35,14 @@
             :class="{
               'scroll-single-line': isScrolling && currentScrollIndex === index,
             }"
-            @click="router.push(`/mainBox/${index}`)"
-          >
-            {{ line }}
+            @click="router.push(`/mainBox/${line.id}`)"
+            
+            >
+            <span v-html="line.content" class="html-content"></span>
           </p>
         </div>
       </div>
+      </ClientOnly>
       <div style="width: 100%">
         <div
           class="scroll-button"
@@ -80,7 +83,7 @@
                 : 'smallTitle_moon'
             "
           >
-            {{ `${showRecord} of ${total} posts` }}
+            {{ `${pageNum} of ${totalPage} posts` }}
           </span>
           <div class="arrow">
             <div
@@ -104,11 +107,11 @@
       </div>
       <div class="pageBody" style="margin-bottom: 20px">
         <div
-          v-for="(item, index) in showList"
+          v-for="(item, index) in pageList"
           :key="index"
           class="hovorDiv"
           :style="{ '--hovorColor': themeStore.hovorColor }"
-          @click="router.push(`/mainBox/${index}`)"
+          @click="router.push(`/mainBox/${item.id}`)"
         >
           <div
             style="
@@ -136,13 +139,13 @@
             >
           </div>
           <span
-            class="text-omit"
+            class="text-omit html-content"
             :class="
               themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'
             "
             style="padding-top: 5px; padding-bottom: 5px"
-            >{{ item.content }}</span
-          >
+            v-html="item.content"
+          ></span>
         </div>
       </div>
       <div class="pageFooter" style="margin-bottom: 20px">
@@ -163,7 +166,7 @@
                 : 'smallTitle_moon'
             "
           >
-            {{ `${showRecord} of ${total} posts` }}
+            {{ `${pageNum} of ${totalPage} posts` }}
           </span>
           <div
             class="rightArrow"
@@ -176,9 +179,9 @@
         </div>
       </div>
     </section>
-    <section class="footer flexCenter" >
+    <section class="footer flexCenter">
       <span
-        style="font-size: 14px;margin-top: 20px;"
+        style="font-size: 14px; margin-top: 20px"
         :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'"
         >Designed by Yu BingCao(Klein) in 2025 years · comment</span
       >
@@ -186,97 +189,27 @@
   </main>
 </template>
 <script setup>
+// import { ref, computed } from "vue";
 import { useThemeStore } from "~~/stores/theme";
-const router=useRouter()
+import { homeHooks } from "~~/app/hooks/homeHooks";
+let {
+  pageNum,
+  pageSize,
+  total,
+  totalPage,
+  getPageSettings,
+  pageList,
+  textList,
+  moreLines,
+  getArticleList,
+  setLoopList,
+} = homeHooks();
+const router = useRouter();
 const themeStore = useThemeStore();
 const leftDisabled = ref(true);
 const rightDisabled = ref(false);
-const currentPage = ref(1);
-const pageSize = ref(5);
-const total = ref(0);
-const totalPage = ref(0);
-const showRecord = ref(0);
-const pageList = ref([
-  {
-    title: "My First Webpage Project",
-    date: "2023-08-01",
-    content:
-      "This is my first webpage project using HTML, CSS, and JavaScript. I learned a lot about web development and had fun creating it!",
-  },
-  {
-    title: "My First Webpage Project",
-    date: "2023-08-01",
-    content:
-      "This is my first webpage project using HTML, CSS, and JavaScript. I learned a lot about web development and had fun creating it!",
-  },
-  {
-    title: "Exploring Nuxt.js for Modern Web Apps",
-    date: "2024-01-15",
-    content:
-      "In this project, I built a modern web application using Nuxt.js. It was exciting to work with server-side rendering and static site generation.",
-  },
-  {
-    title: "My First Webpage Project",
-    date: "2023-08-01",
-    content:
-      "This is my first webpage project using HTML, CSS, and JavaScript. I learned a lot about web development and had fun creating it!",
-  },
-  {
-    title: "Exploring Nuxt.js for Modern Web Apps",
-    date: "2024-01-15",
-    content:
-      "In this project, I built a modern web application using Nuxt.js. It was exciting to work with server-side rendering and static site generation.",
-  },
-  {
-    title: "My First Webpage Project",
-    date: "2023-08-01",
-    content:
-      "This is my first webpage project using HTML, CSS, and JavaScript. I learned a lot about web development and had fun creating it!",
-  },
-  {
-    title: "Exploring Nuxt.js for Modern Web Apps",
-    date: "2024-01-15",
-    content:
-      "In this project, I built a modern web application using Nuxt.js. It was exciting to work with server-side rendering and static site generation.",
-  },
-  {
-    title: "My First Webpage Project",
-    date: "2023-08-01",
-    content:
-      "This is my first webpage project using HTML, CSS, and JavaScript. I learned a lot about web development and had fun creating it!",
-  },
-  {
-    title: "Exploring Nuxt.js for Modern Web Apps",
-    date: "2024-01-15",
-    content:
-      "In this project, I built a modern web application using Nuxt.js. It was exciting to work with server-side rendering and static site generation.",
-  },
-  {
-    title: "My First Webpage Project",
-    date: "2023-08-01",
-    content:
-      "This is my first webpage project using HTML, CSS, and JavaScript. I learned a lot about web development and had fun creating it!",
-  },
-  {
-    title: "Exploring Nuxt.js for Modern Web Apps",
-    date: "2024-01-15",
-    content:
-      "In this project, I built a modern web application using Nuxt.js. It was exciting to work with server-side rendering and static site generation.",
-  },
-]);
-const textList = ref([
-  "Hello! I'm Yu Bingcao, a passionate coding enthusiast.",
-  "I love exploring new technologies and building innovative projects.",
-  "In my free time, I enjoy hiking, reading, and playing the guitar.",
-  "This is my second webpage project, and I'm excited to share it with you!",
-]);
-const moreLines = [
-  "Built my first website at 12 (using FrontPage)",
-  "Contributed to open-source projects since 2010",
-  "Favorite programming language: Python (but loves Rust too)",
-  "Once optimized a loop to reduce runtime by 90%",
-  "Taught myself Assembly to hack old game consoles",
-];
+await setLoopList()
+moreLines.value.push(...textList.value);
 const leftArrowStyle = computed(() => {
   if (themeStore.theme.label == "light") {
     return {
@@ -303,45 +236,30 @@ const rightArrowStyle = computed(() => {
     };
   }
 });
-const showList = ref([]);
-const getPageSettings = () => {
-  total.value = pageList.value.length;
-  totalPage.value = Math.ceil(total.value / pageSize.value);
-  showRecord.value = Math.min(pageSize.value, total.value);
-  showList.value = pageList.value.slice(0, showRecord.value);
-};
-getPageSettings();
+
 const handleLeftArrow = () => {
-  if (currentPage.value == 1) {
+  if (pageNum.value == 1) {
     leftDisabled.value = true;
     return;
   }
   rightDisabled.value = false;
-  currentPage.value--;
-  if (currentPage.value == 1) {
+  pageNum.value--;
+  getArticleList();
+  if (pageNum.value == 1) {
     leftDisabled.value = true;
   }
-  showList.value = pageList.value.slice(
-    (currentPage.value - 1) * pageSize.value,
-    currentPage.value * pageSize.value
-  );
-  showRecord.value = currentPage.value * pageSize.value;
 };
 const handleRightArrow = () => {
-  if (currentPage.value == totalPage.value) {
+  if (pageNum.value == totalPage.value) {
     rightDisabled.value = true;
     return;
   }
   leftDisabled.value = false;
-  currentPage.value++;
-  if (currentPage.value == totalPage.value) {
+  pageNum.value++;
+  getArticleList();
+  if (pageNum.value == totalPage.value) {
     rightDisabled.value = true;
   }
-  showList.value = pageList.value.slice(
-    (currentPage.value - 1) * pageSize.value,
-    Math.min(currentPage.value * pageSize.value, total.value)
-  );
-  showRecord.value = Math.min(currentPage.value * pageSize.value, total.value);
 };
 const lineHeight = ref(30);
 const isScrolling = ref(false);
@@ -359,13 +277,15 @@ const scrollUp = async () => {
     await new Promise((resolve) => setTimeout(resolve, 150)); // 每行间隔150ms，更有节奏感
   }
   textList.value.shift();
-  textList.value.push(moreLines[moreIndex]);
-  moreIndex = (moreIndex + 1) % moreLines.length;
+  textList.value.push(moreLines.value[moreIndex]);
+  moreIndex = (moreIndex + 1) % moreLines.value.length;
 
   // 3. 重置状态，准备下一次滚动
   currentScrollIndex.value = -1;
   isScrolling.value = false;
 };
+
+getArticleList();
 </script>
 <style lang="scss" scoped>
 .arrow {
@@ -422,6 +342,7 @@ const scrollUp = async () => {
   flex-direction: column;
   padding-left: 20px;
   padding-right: 20px;
+  max-height: 60px;
   &:hover {
     background-color: var(--hovorColor);
     .date-text {
@@ -477,7 +398,7 @@ const scrollUp = async () => {
 }
 // 滚动容器：只负责固定高度和隐藏超出，无动画
 .scroller-container {
-  height: calc(4 * #{30px}); // 固定4行高度
+  height: calc(5 * #{30px}); // 固定4行高度
   overflow: hidden;
   margin-top: 20px;
   border-radius: 8px;
@@ -502,7 +423,42 @@ const scrollUp = async () => {
   white-space: nowrap;
   overflow: hidden; /* 隐藏超出容器的文本 */
   text-overflow: ellipsis; /* 超出部分显示省略号 */
+  overflow: hidden;
   width: 100%;
+}
+.html-content {
+  display: inline;
+  
+  // 重置所有内部元素
+  :deep(*) {
+    display: inline !important;
+    white-space: nowrap !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: inherit !important;
+    font-size: inherit !important;
+    color: inherit !important;
+  }
+
+  // 隐藏换行
+  :deep(br) {
+    display: none !important;
+  }
+
+  // 隐藏或缩小图片
+  :deep(img) {
+    display: none !important;  // 或者限制大小
+    /* 或者
+    max-width: 20px !important;
+    height: 16px !important;
+    vertical-align: middle !important;
+    */
+  }
+
+  // 隐藏视频
+  :deep(video) {
+    display: none !important;
+  }
 }
 
 // 单行滚动动画类（v-for 共用这个动画逻辑）
