@@ -331,7 +331,6 @@ getArticleList();
   }
 }
 .page {
-  // position: relative;
   border: 2px solid;
   border-radius: 1.5rem;
   flex-shrink: 0;
