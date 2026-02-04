@@ -17,31 +17,38 @@
       >
       <span
         :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'"
-        style="font-size: 20px; margin-top: 20px; display: inline-block"
+        style="
+          font-size: 20px;
+          margin-top: 20px;
+          display: inline-block;
+          width: 100%;
+        "
       >
         This is my second webpage project.</span
       >
       <ClientOnly>
-      <div class="scroller-container">
-        <!-- 文本列表：v-for 每行都用同一个 class，动态加动画 -->
-        <div
-          class="text-list"
-          :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'"
-        >
-          <p
-            v-for="(line, index) in textList"
-            :key="index"
-            class="text-line"
-            :class="{
-              'scroll-single-line': isScrolling && currentScrollIndex === index,
-            }"
-            @click="router.push(`/mainBox/${line.id}`)"
-            
+        <div class="scroller-container">
+          <!-- 文本列表：v-for 每行都用同一个 class，动态加动画 -->
+          <div
+            class="text-list"
+            :class="
+              themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'
+            "
+          >
+            <p
+              v-for="(line, index) in textList"
+              :key="index"
+              class="text-line"
+              :class="{
+                'scroll-single-line':
+                  isScrolling && currentScrollIndex === index,
+              }"
+              @click="router.push(`/mainBox/${line.id}`)"
             >
-            <span v-html="line.content" class="html-content"></span>
-          </p>
+              <span v-html="line.content" class="html-content"></span>
+            </p>
+          </div>
         </div>
-      </div>
       </ClientOnly>
       <div style="width: 100%">
         <div
@@ -208,7 +215,7 @@ const router = useRouter();
 const themeStore = useThemeStore();
 const leftDisabled = ref(true);
 const rightDisabled = ref(false);
-await setLoopList()
+await setLoopList();
 moreLines.value.push(...textList.value);
 const leftArrowStyle = computed(() => {
   if (themeStore.theme.label == "light") {
@@ -428,7 +435,7 @@ getArticleList();
 }
 .html-content {
   display: inline;
-  
+
   // 重置所有内部元素
   :deep(*) {
     display: inline !important;
@@ -447,7 +454,7 @@ getArticleList();
 
   // 隐藏或缩小图片
   :deep(img) {
-    display: none !important;  // 或者限制大小
+    display: none !important; // 或者限制大小
     /* 或者
     max-width: 20px !important;
     height: 16px !important;
