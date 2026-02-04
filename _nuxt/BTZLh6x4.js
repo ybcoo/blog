@@ -1,1 +1,0 @@
-import{a8 as t}from"#entry";const r=t("theme",{state:()=>({active:"home",theme:{label:"light",color:"#f6f1ed"}}),persist:!0,getters:{hovorColor:e=>e.theme.label==="light"?"#e5e0d6":"#1b2212"},actions:{}});export{r as u};
