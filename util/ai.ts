@@ -11,7 +11,7 @@ import {
 } from "@langchain/core/messages";
 // ============= 创建千问聊天模型 =============
 const chat = new ChatOpenAI({
-  model: "qwen-vl-max-2025-08-13",
+  model: "qwen3.5-plus",
   apiKey: "sk-91af07eee1e8438c9b7bbb2b22f50468",
   configuration: {
     baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",

@@ -9,23 +9,33 @@
         >Hi~</span
       >
       <div class="iconContainer" @click="showRobot = false">
-        <img
-          class="robotIcon"
-          :src="
+        <!-- :src="
             themeStore.theme.label === 'light'
               ? robotIcon.default_sun
               : robotIcon.default_moon
-          "
+          " -->
+        <img
+          class="robotIcon"
+          src="https://file.ybcfish.cloud/gemini.png"
           alt="Robot Icon"
         />
       </div>
     </div>
     <div v-else class="chatContainer">
-        <div class="header">
-            <img class="deleteIcon" :src="deleteIcon.default_sun" alt="Delete Icon" @click="showRobot=true"/>
-        </div>
+      <div class="header">
+        <img
+          class="deleteIcon"
+          :src="deleteIcon.default_sun"
+          alt="Delete Icon"
+          @click="showRobot = true"
+        />
+      </div>
       <div class="chatContent" ref="chatContentRef">
-        <div class="messageDivider" v-for="(item, index) in chatList" :key="index">
+        <div
+          class="messageDivider"
+          v-for="(item, index) in chatList"
+          :key="index"
+        >
           <div class="robotMessage" v-if="item?.role === 'robot'">
             <img class="messageIcon" :src="robotIcon.default_moon" alt="" />
             <span>{{ item?.message }}</span>
@@ -54,13 +64,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { robotIcon,deleteIcon } from "~/assets/icon/svg";
+import { robotIcon, deleteIcon } from "~/assets/icon/svg";
 import { useThemeStore } from "~~/stores/theme";
 import { manageIcon } from "~/assets/icon/svg";
-import {chatHooks} from "~~/util/ai";
-const {startChat,setSystemMessage}=chatHooks()
+import { chatHooks } from "~~/util/ai";
+const { startChat, setSystemMessage } = chatHooks();
 const themeStore = useThemeStore();
-const props=defineProps<{
+const props = defineProps<{
   formItem: any;
 }>();
 const showRobot = ref(true);
@@ -83,18 +93,24 @@ const scrollToBottom = () => {
 };
 
 // 监听消息列表变化，自动滚动
-watch(() => chatList.value, () => {
-  scrollToBottom();
-}, { deep: true });
+watch(
+  () => chatList.value,
+  () => {
+    scrollToBottom();
+  },
+  { deep: true },
+);
 const showLoading = ref(false);
 const getUserIcon = computed(() => {
   return themeStore.theme.label === "light"
     ? manageIcon.default_sun
     : manageIcon.default_moon;
 });
-setSystemMessage(`你叫fish,是摘要文章机器人,别人会问你左边的文章帮我概括下,然后这个文章是我v-html也就是content属性进来的,所以你要自己去解析理解内容意思,那好你清楚了背景,我会给你个js对象 title是标题,type是类型,content是内容,其他属性不用管,v-html里有图片能解析出来就介绍,没有就不用 下面这就是js ${JSON.stringify(props?.formItem)}`)
+setSystemMessage(
+  `你叫fish,是摘要文章机器人,别人会问你左边的文章帮我概括下,然后这个文章是我v-html也就是content属性进来的,所以你要自己去解析理解内容意思,那好你清楚了背景,我会给你个js对象 title是标题,type是类型,content是内容,其他属性不用管,v-html里有图片能解析出来就介绍,没有就不用 下面这就是js ${JSON.stringify(props?.formItem)}`,
+);
 
-const sendMessage = async() => {
+const sendMessage = async () => {
   if (inputMessage.value.trim() === "") return;
   chatList.value.push({
     role: "user",
@@ -106,12 +122,10 @@ const sendMessage = async() => {
   showLoading.value = true;
   const response = await startChat(tmpValue);
   showLoading.value = false;
-    chatList.value.push({
-      role: "robot",
-      message: response,
-    });
-
-  
+  chatList.value.push({
+    role: "robot",
+    message: response,
+  });
 };
 </script>
 <style lang="scss" scoped>
@@ -139,9 +153,9 @@ const sendMessage = async() => {
     &::-webkit-scrollbar {
       display: none;
     }
-    .messageDivider{
-        display: flex;
-        flex-direction: column;
+    .messageDivider {
+      display: flex;
+      flex-direction: column;
     }
   }
   .chatContainer {
@@ -152,16 +166,16 @@ const sendMessage = async() => {
     flex-direction: column;
     gap: 20px;
     max-height: 420px;
-    .header{
-        width: 100%;
-        display: flex;
-        justify-content: flex-end;
-        padding: 0px 10px;
-        .deleteIcon{
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-        }
+    .header {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      padding: 0px 10px;
+      .deleteIcon {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+      }
     }
     .robotMessage {
       display: flex;
@@ -230,13 +244,23 @@ const sendMessage = async() => {
     width: 100%;
     height: 100%;
     cursor: pointer;
+    /* 启用动画：名字、时长、线性匀速、无限次循环 */
+    animation: img-rotate 3s linear infinite;
+  }
+  @keyframes img-rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 }
-.messageIcon{
-    width: 32px;
-    height: 32px;
-    padding: 5px;
-    border-radius: 50%;
+.messageIcon {
+  width: 32px;
+  height: 32px;
+  padding: 5px;
+  border-radius: 50%;
 }
 /* 打字动画 */
 .typingIndicator {
@@ -265,7 +289,9 @@ const sendMessage = async() => {
 }
 
 @keyframes typing {
-  0%, 60%, 100% {
+  0%,
+  60%,
+  100% {
     transform: translateY(0);
     opacity: 0.4;
   }
