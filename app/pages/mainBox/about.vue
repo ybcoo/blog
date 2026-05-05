@@ -90,11 +90,14 @@
         </div>
       </div>
     </section>
+    <Loading v-show="showLoading"/>
   </main>
 </template>
 <script setup lang="ts">
 import { useThemeStore } from "~~/stores/theme";
 import { getArticle } from "~~/util/api";
+import Loading from "~~/components/Loading.vue";
+const showLoading = ref(false);
 const router = useRouter();
 const themeStore=useThemeStore()
 const travelList = ref<Array<any>>([]);
@@ -104,6 +107,7 @@ const diaryList = ref<Array<any>>([]);
 const experienceList = ref<Array<any>>([]);
 const getArticleDetail = async () => {
   try {
+    showLoading.value = true;
     const { data, error } = await getArticle();
     if (error.value) {
       console.error("Failed to fetch articles:", error.value);
@@ -117,14 +121,17 @@ const getArticleDetail = async () => {
     experienceList.value = list.filter((i: any) => i.type == "experience");
   } catch (e) {
     console.error(e);
+  }finally{
+    showLoading.value = false;
   }
 };
-await getArticleDetail();
+getArticleDetail();
 </script>
 <style lang="scss" scoped>
 .main {
   width: 100%;
   height: 100%;
+  position: relative;
   max-width: 60vh; //这其实是bug但是计算刚刚好
   display: flex;
   justify-content: center;

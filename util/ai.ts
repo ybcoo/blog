@@ -10,18 +10,25 @@ import {
   AIMessage,
 } from "@langchain/core/messages";
 // ============= 创建千问聊天模型 =============
+// const chat = new ChatOpenAI({
+//   model: "qwen3.5-plus",
+//   apiKey: "sk-91af07eee1e8438c9b7bbb2b22f50468",
+//   configuration: {
+//     baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+//   },
+// });
+//本地模型
 const chat = new ChatOpenAI({
-  model: "qwen3.5-plus",
-  apiKey: "sk-91af07eee1e8438c9b7bbb2b22f50468",
+  model: "gemma3:4b",
+  apiKey: "sk-ybcfish",
   configuration: {
-    baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    baseURL: "https://openai.ybcfish.cloud/v1",
   },
 });
 export const chatHooks = () => {
   // 系统提示词（设定 AI 角色）
 
-  let systemPrompt: any =
-    "你是一个友好、专业的AI助手名字叫fish，乐于助人，回答简洁明了。";
+  let systemPrompt: any =new SystemMessage('你是一个友好、专业的AI助手名字叫fish，乐于助人，回答简洁明了,少推理快速回答。')
 
   // 用简单数组存储对话历史
   let history: any = [];

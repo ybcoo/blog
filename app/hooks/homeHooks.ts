@@ -4,6 +4,7 @@ export const homeHooks = () => {
   const pageSize = ref(5);
   const total = ref(0);
   const totalPage = ref(0);
+  const showLoading = ref(false);
   const pageList = ref([
     {
       title: "My First Webpage Project",
@@ -99,6 +100,7 @@ export const homeHooks = () => {
   };
 
   const getArticleList = async () => {
+    showLoading.value = true;
     try {
       const { data, error } = await getArticle({
         pageNum: pageNum.value,
@@ -121,6 +123,8 @@ export const homeHooks = () => {
       }
     } catch (e) {
       console.error(e);
+    }finally{
+      showLoading.value = false;
     }
   };
   return {
@@ -134,5 +138,6 @@ export const homeHooks = () => {
     getArticleList,
     moreLines,
     setLoopList,
+    showLoading,
   };
 };

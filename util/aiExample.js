@@ -29,10 +29,10 @@ import {
 
 // ============= 创建千问聊天模型 =============
 const chat = new ChatOpenAI({
-  model: "qwen-plus",
-  apiKey: "sk-91af07eee1e8438c9b7bbb2b22f50468",
+  model: "qwen3.5:4b",
+  apiKey: "local",
   configuration: {
-    baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    baseURL: "https://model.ybcfish.cloud/v1",
   },
 });
 
@@ -40,7 +40,7 @@ const chat = new ChatOpenAI({
 export async function helloWorld() {
   console.log("=== 第一步：发送一条消息 ===");
 
-  const response = await chat.invoke([new HumanMessage("你好")]);
+  const response = await chat.invoke([new HumanMessage("今天几号")]);
 
   console.log(response.content);
 }
@@ -120,8 +120,8 @@ export async function withMemory() {
 }
 
 // 运行示例
-// helloWorld();
-// withSystemMessage();
+helloWorld();
+withSystemMessage();
 //withMemory(); // 运行第三步
 // 简单版本，不使用 langgraph，避免 AsyncLocalStorage 兼容性问题
 export const chatHooks = () => {

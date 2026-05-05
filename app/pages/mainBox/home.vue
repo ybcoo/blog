@@ -142,7 +142,7 @@
               :class="
                 themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'
               "
-              >{{ item.date }}</span
+              >{{ formatTimestampToDate(item.date) }}</span
             >
           </div>
           <span
@@ -193,12 +193,16 @@
         >Designed by Yu BingCao(Klein) in 2025 years · comment</span
       >
     </section>
+    <Loading v-show="showLoading"/>
   </main>
 </template>
 <script setup>
 // import { ref, computed } from "vue";
 import { useThemeStore } from "~~/stores/theme";
 import { homeHooks } from "~~/app/hooks/homeHooks";
+import { timeHooks } from "~/hooks/timeHooks";
+import Loading from "~~/components/Loading.vue";
+const { formatTimestampToDate } = timeHooks();
 let {
   pageNum,
   pageSize,
@@ -210,6 +214,7 @@ let {
   moreLines,
   getArticleList,
   setLoopList,
+  showLoading
 } = homeHooks();
 const router = useRouter();
 const themeStore = useThemeStore();
@@ -360,6 +365,7 @@ getArticleList();
 .main {
   width: 100%;
   height: 100%;
+  position: relative;
   max-width: 668px;
   padding-top: 200px;
   display: flex;

@@ -3,6 +3,9 @@ import { defineNuxtConfig } from 'nuxt/config'
 export default defineNuxtConfig({
   app: {
     baseURL: '/',   // 开发、生产统一用 /blog/
+    head:{
+      link:[{ rel: 'icon', type: 'image/x-icon', href: 'https://file.ybcfish.cloud/fishybc-clearv1.png' },]
+    }
   },
   nitro: {
     // preset: 'github-pages'

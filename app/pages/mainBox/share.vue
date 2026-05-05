@@ -1,10 +1,15 @@
 <template>
-  <Preview :form="formItem"></Preview>
+  <main class="main">
+    <Preview :form="formItem"></Preview>
+    <Loading v-show="showLoading" />
+  </main>
 </template>
 <script setup lang="ts">
 import { onMounted, reactive, ref, watch } from "vue";
 import { getExperienceArticle } from "../../../util/api";
 import Preview from "../../../components/Preview.vue";
+import Loading from "~~/components/Loading.vue";
+const showLoading = ref(false);
 interface formType {
   id?: number;
   createTime?: string;
@@ -22,27 +27,33 @@ const resultDefault: any = {
   type: "experience",
 };
 const formItem = ref<formType | null>(resultDefault);
-try {
-  const { data, error } = await getExperienceArticle();
-  watch(
-    () => data.value,
-    (res) => {
-      if (!res) return;
-      if (error.value) {
-        console.error("请求失败：", error.value);
-        return;
-      }
-      const { code, result } = res as any;
-      if (code === 0 && result) {
-        formItem.value = result;
-      }
-    },
-    { immediate: true },
-  );
-} catch (e) {
-  console.error(e);
-}
+const getExperience = async () => {
+  try {
+    showLoading.value = true;
+    const { data, error } = await getExperienceArticle();
+    watch(
+      () => data.value,
+      (res) => {
+        if (!res) return;
+        if (error.value) {
+          console.error("请求失败：", error.value);
+          return;
+        }
+        const { code, result } = res as any;
+        if (code === 0 && result) {
+          formItem.value = result;
+        }
+      },
+      { immediate: true },
+    );
+  } catch (e) {
+    console.error(e);
+  } finally {
+    showLoading.value = false;
+  }
+};
 
+getExperience();
 // onMounted(async()=>{
 //   try{
 //     const { data, error } = await getExperienceArticle()
@@ -60,3 +71,10 @@ try {
 //   }
 // })
 </script>
+<style lang="scss" scoped>
+.main {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+</style>
