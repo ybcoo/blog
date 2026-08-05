@@ -63,6 +63,6 @@ await getArticleDetail()
 <style lang="scss" scoped>
 .detail-container{
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
 }
 </style>

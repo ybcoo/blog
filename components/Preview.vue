@@ -32,7 +32,7 @@
       </h3>
     </div>
     <div
-      class="content"
+      class="content html-content"
       :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'"
       :style="{
         '--font': themeStore.theme.label === 'light' ? '#45403c' : '#d9e0d8',
@@ -43,11 +43,14 @@
         v-html="form?.content"
       ></div>
     </div>
+    <Comment v-model:list="commentList"/>
   </div>
 </template>
 <script setup lang="ts">
 import { useThemeStore } from "~~/stores/theme";
+import Comment from '../components/comment.vue'
 const themeStore = useThemeStore();
+const commentList = ref<any>([])
 interface formType {
   id?: number;
   createTime?: string;
@@ -70,15 +73,15 @@ const typeMap: any = {
 </script>
 <style lang="scss" scoped>
 .review {
-  overflow-y: auto;
-  overflow-x: hidden;
+  // overflow-y: auto;
+  // overflow-x: hidden;
   scrollbar-width: none; // Firefox 专属：隐藏滚动条
   -ms-overflow-style: none; // IE/Edge 旧版：隐藏滚动条
   &::-webkit-scrollbar {
     display: none; // Chrome/Safari/Edge 新版：隐藏滚动条
   }
   width: 100%;
-  height: 100%;
+  // height: 100%;
   border-radius: 8px;
   display: flex;
   flex-direction: column;

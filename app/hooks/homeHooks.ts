@@ -1,4 +1,4 @@
-import { getArticle } from "~~/util/api";
+import { getArticle, getPublicArticle } from "~~/util/api";
 export const homeHooks = () => {
   const pageNum = ref(1);
   const pageSize = ref(5);
@@ -77,15 +77,12 @@ export const homeHooks = () => {
   let moreLines = ref([]);
   const setLoopList = async () => {
     try {
-      const { data, error } = await getArticle({
-        pageNum: 1,
-        pageSize: 10,
-      });
+      const { data, error } = await getPublicArticle();
       if (error.value) {
         console.error("Failed to fetch articles:", error.value);
       }
       const { code, result } = data?.value ?? ({} as any);
-      let { list = [], total: totalNum = 0 } = result || {};
+      const { list = [] } = result || {};
       if (code === 0 && list.length > 5) {
         textList.value = list.slice(0, 5);
         moreLines.value = list.slice(5);
@@ -115,18 +112,42 @@ export const homeHooks = () => {
       if (code === 0) {
         pageList.value = list.map((item: any) => ({
           title: item.title,
+          type: item.type,
           date: item.createTime,
           content: item.content,
           id: item.id,
+          url: item.url
         }));
         getPageSettings();
       }
     } catch (e) {
       console.error(e);
-    }finally{
+    } finally {
       showLoading.value = false;
     }
   };
+  const getAllArticle = async () => {
+    try {
+      const { data, error } = await getArticle();
+      if (error.value) {
+        console.error("Failed to fetch articles:", error.value);
+      }
+      const { code, result } = data?.value ?? ({} as any);
+      const { list = [], total: totalNum = 0 } = result || {};
+      if (code === 0) {
+        return list.map((item: any) => ({
+          title: item.title,
+          type: item.type,
+          date: item.createTime,
+          content: item.content,
+          id: item.id,
+          url: item.url
+        }));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
   return {
     pageNum,
     pageSize,
@@ -139,5 +160,6 @@ export const homeHooks = () => {
     moreLines,
     setLoopList,
     showLoading,
+    getAllArticle
   };
 };

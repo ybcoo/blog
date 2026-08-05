@@ -1,0 +1,131 @@
+/* 1. 应用怪异盒模型到所有元素（核心：padding/border不影响元素尺寸） */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 2. 根元素高度/宽度配置（打通百分比高度链条） */
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+.html-content {
+  color: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.html-content * {
+  margin: 0 !important;
+  padding: 0 !important;
+  color: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.html-content a {
+  color: inherit !important;
+  text-decoration: underline;
+}
+
+.html-content strong,
+.html-content b {
+  color: var(--font, inherit) !important;
+  font-weight: 600;
+}
+
+/* 单行省略基础能力 */
+.text-omit {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 关键：当富文本也要单行省略时，压平内部块级结构 */
+.html-content.text-omit,
+.text-omit.html-content {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.html-content.text-omit *,
+.text-omit.html-content * {
+  display: inline !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: inherit !important;
+  font-size: inherit !important;
+  color: inherit !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* br/img/video 这类会破坏单行摘要的内容直接隐藏 */
+.html-content.text-omit br,
+.html-content.text-omit img,
+.html-content.text-omit video,
+.text-omit.html-content br,
+.text-omit.html-content img,
+.text-omit.html-content video {
+  display: none !important;
+}
+#__nuxt {
+  height: 100%; /* 继承 body 的 100% 高度 */
+  width: 100%;
+}
+.bigTitle_sun{
+  color: #45403c;
+}
+.bigTitle_moon{
+  color: #d9e0d8;
+}
+.smallTitle_sun{
+  color: #716d68;
+}
+.smallTitle_moon{
+  color: #bbc1b5;
+}
+.font_sun{
+  color: #aba49f;
+}
+.font_moon{
+  color: #8a9588;
+}
+.arrowColor_sun{
+  color: #aba49f;
+}
+.arrowColor_moon{
+  color: #8a9588;
+}
+.disabled_sun{
+  color: #d0cbc5;
+  &:hover {
+    cursor: default !important; 
+    background-color: transparent !important; /* 取消hover背景 */
+  }
+}
+.disabled_moon{
+  color: #384227;
+  &:hover {
+    cursor: default !important; 
+    background-color: transparent !important; /* 取消hover背景 */
+  }
+}
+.flexCenter{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

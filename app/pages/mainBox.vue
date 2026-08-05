@@ -4,15 +4,15 @@
     <div class="top-nav" :style="{ '--hover-bg': hovorColor }">
       <section class="flexCenter" style="gap: 16px;width: calc(100% - 50px);">
         <NuxtLink class="icon-container" :style="{ backgroundColor: route.path === '/mainBox/home' ? 'white' : '' }"
-           to="/mainBox/home">
+          to="/mainBox/home">
           <img class="icon" :src="changeImg(homePic)" alt="home" />
         </NuxtLink>
         <NuxtLink class="icon-container" :style="{ backgroundColor: route.path === '/mainBox/about' ? 'white' : '' }"
-           to="/mainBox/about">
+          to="/mainBox/about">
           <img class="icon" :src="changeImg(aboutPic)" alt="about" />
         </NuxtLink>
         <NuxtLink class="icon-container" :style="{ backgroundColor: route.path === '/mainBox/share' ? 'white' : '' }"
-           to="/mainBox/share">
+          to="/mainBox/share">
           <img class="icon" :src="changeImg(sharePic)" alt="share" />
         </NuxtLink>
         <button class="icon-container" :disabled="isDisabled" @click="toggleThemeWithAnimation">
@@ -30,15 +30,15 @@
       <nav class="navContainer">
         <div class="nav" :style="{ '--hover-bg': hovorColor }">
           <NuxtLink class="icon-container" :style="{ backgroundColor: route.path === '/mainBox/home' ? 'white' : '' }"
-             to="/mainBox/home">
+            to="/mainBox/home">
             <img class="icon" :src="changeImg(homePic)" alt="home" />
           </NuxtLink>
           <NuxtLink class="icon-container" :style="{ backgroundColor: route.path === '/mainBox/about' ? 'white' : '' }"
-             to="/mainBox/about">
+            to="/mainBox/about">
             <img class="icon" :src="changeImg(aboutPic)" alt="about" />
           </NuxtLink>
           <NuxtLink class="icon-container" :style="{ backgroundColor: route.path === '/mainBox/share' ? 'white' : '' }"
-             to="/mainBox/share">
+            to="/mainBox/share">
             <img class="icon" :src="changeImg(sharePic)" alt="share" />
           </NuxtLink>
         </div>
@@ -49,24 +49,32 @@
       </nav>
     </aside>
     <section class="content">
-      <NuxtPage />
+      <!-- <section class="mainContent"> -->
+        <NuxtPage />
+      <!-- </section> -->
+      <!-- <section class="commentCnt">
+        <Comment v-model:list="commentList" v-if="route.name == 'mainBox-id'" />
+      </section> -->
     </section>
-    <section class="manage flexCenter center" @click="handleToManage" :style="{ position: 'absolute', right: 0, top: 0 }">
+
+    <section class="manage flexCenter center" @click="handleToManage"
+      :style="{ position: 'absolute', right: 0, top: 0 }">
       <img class="icon " :src="changeImg(managePic)" alt="manage" />
     </section>
   </main>
 </template>
-<script setup>
+<script setup lang="ts">
 import { homePic, aboutPic, sharePic, themePic, managePic } from "~/composables/theme";
+import Comment from "~~/components/comment.vue";
 import { useThemeStore } from "~~/stores/theme";
-const route=useRoute()
+const route = useRoute()
 const themeStore = useThemeStore();
 const isDisabled = ref(false);
 // 涟漪加载效果
 const showRipple = ref(false);
 const rippleStyle = ref({});
 const rippleSize = ref(0);
-const toggleThemeWithAnimation = (event) => {
+const toggleThemeWithAnimation = (event: any) => {
   const button = event.currentTarget;
   const buttonRect = button.getBoundingClientRect();
   isDisabled.value = true;
@@ -139,7 +147,7 @@ const themeImg = computed(() => {
     return themePic.value.default_moon;
   }
 });
-const changeImg = (img) => {
+const changeImg = (img: any) => {
   if (img.label == route.name) {
     return img.select;
   } else {
@@ -151,8 +159,8 @@ const changeImg = (img) => {
   }
 };
 //跳转后台管理
-const handleToManage=()=>{
-  window.open('https://ybcoo.github.io/blog-manage-ts','_blank')
+const handleToManage = () => {
+  window.open('https://ybcoo.github.io/blog-manage-ts', '_blank')
 }
 </script>
 <style lang="scss" scoped>
@@ -212,12 +220,34 @@ const handleToManage=()=>{
   width: 80%;
   height: 100%;
   display: flex;
+  /* flex-direction: column; */
   justify-content: center;
   padding-right: 20%;
   align-items: stretch;
-  overflow-y: hidden;
+  overflow-y: auto;
 
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
+  /* Firefox 浏览器 */
+  scrollbar-width: none;
+  /* IE/Edge 浏览器 */
+  -ms-overflow-style: none;
+
+  .mainContent {
+    width: 100%;
+    /* height: 100%; */
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    padding-right: 25%;
+
+  }
+  .commentCnt{
+    padding-right: 25%;
+  }
   @media (max-width: 768px) {
     width: 100%;
     height: calc(100% - 60px); // 减去顶部导航高度
@@ -273,6 +303,7 @@ const handleToManage=()=>{
 }
 
 .icon-container {
+  z-index: 1000;
   width: 50px;
   height: 50px;
   display: flex;
@@ -310,6 +341,7 @@ const handleToManage=()=>{
 
 .ripple-effect {
   position: absolute;
+  z-index: 1000;
   border-radius: 50%;
   background-color: var(--backColor);
   transform: scale(0);

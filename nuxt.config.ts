@@ -19,7 +19,7 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { redirect: '/mainBox/home' }//开ssr可能要加上blog
   },
-  css: ['~/assets/css/global.css'], // 这里的路径是相对于项目根目录的
+  css: ['~/assets/css/global.scss'], // 这里的路径是相对于项目根目录的
   // 核心新增：Vite原生配置节点，直接传递给底层Vite内核
   vite: {
     server: {
