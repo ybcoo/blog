@@ -1,7 +1,7 @@
 <template>
-    <section v-show="showEncode" class="alertCnt">
+    <section v-show="showEncode"  class="alertCnt" @click="handleCancel">
 
-        <div class="cardCnt">
+        <div class="cardCnt" @click.stop>
 
             <div class="header">
                 <span :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">encode</span>
@@ -11,29 +11,35 @@
             </div>
             <div class="middle">
                 <input :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'" class="input" type="password" placeholder="请输入密码以解密">
+                <div class="errorIcon" v-show="showError">
+                    <img class="errorImg" :src="errorIcon.default" alt="">
+                    <span >encode fail</span>
+                </div>
             </div>
             <div class="footer">
                 <div class="btnCnt">
                     <button :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'" class="cancel btn" @click="handleCancel">cancel</button>
-                    <button :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'" class="confirm btn">confirm</button>
+                    <button :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'" class="confirm btn" @click="showError=true">confirm</button>
                 </div>
             </div>
         </div>
     </section>
 </template>
 <script setup lang="ts">
-import { cancelIcon } from "~/assets/icon/svg";
+import { cancelIcon,errorIcon } from "~/assets/icon/svg";
 import { useThemeStore } from "~~/stores/theme";
-const themeStore = useThemeStore()
 defineProps<{
     showEncode?: boolean
 }>()
 const emit = defineEmits<{
     (e:'update:showEncode',value:any):any
 }>()
+const themeStore = useThemeStore()
 const handleCancel=()=>{
     emit('update:showEncode',false)
+    showError.value=false
 }
+const showError=ref(false)
 </script>
 <style lang="scss" scoped>
 .alertCnt {
@@ -46,6 +52,25 @@ const handleCancel=()=>{
 }
 .middle{
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    .errorIcon{
+        display: flex;
+        align-items: center;
+        padding: 0 5px;
+        gap: 5px;
+        .errorImg{
+            width: 16px;
+            height: 16px;
+        }
+    }
+    span{
+        color: #fb463c;
+        font-size: 12px;
+        font-weight: 700;
+    }
 }
 .input {
     padding: 6px 10px;
@@ -59,6 +84,7 @@ const handleCancel=()=>{
 .iconCnt {
     &:hover{
         cursor: pointer;
+        transform: translateY(-50%) scale(1.3);
     }
     position: absolute;
     top: 50%;
@@ -104,6 +130,7 @@ const handleCancel=()=>{
             border-radius: 8px;
             &:hover{
                 cursor: pointer;
+                transform: scale(1.1);
             }
         }
 

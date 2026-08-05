@@ -40,10 +40,10 @@
         <div class="contactCnt" @click="handleToGithub">
           <img :src="githubUrl" alt="" class="contactIcon">
         </div>
-        <div style="margin-left: 20px;" class="contactCnt" @click="showMail=!showMail">
+        <div style="margin-left: 10px;" class="contactCnt" @click="showMail=!showMail">
           <img :src="gmailUrl" alt="" class="contactIcon">   
         </div>
-        <div style="margin-left: 20px;" class="mailCnt" :style="{backgroundColor:showMail?'white':'transparent'}">
+        <div style="margin-left: 10px;" class="mailCnt" :style="{backgroundColor:showMail?'white':'transparent'}">
           <span :class="{'font_sun':themeStore.theme.label === 'light','font_moon':themeStore.theme.label === 'dark','opacity-show':showMail,'opacity-hide':!showMail}" >yubingcaoopen@gmail.com</span>
         </div>
         
