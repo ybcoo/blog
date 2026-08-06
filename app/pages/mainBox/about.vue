@@ -4,7 +4,7 @@
     <section class="middle" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'" :style="{
       borderColor: themeStore.theme.label === 'light' ? '#eee9e4' : '#232b1c',
     }">
-      <div class="publicCnt" :class="{rightTranslate:index%2==0,leftTranslate:index%2==1,shadowLight:themeStore.theme.label === 'light',shadowDark:themeStore.theme.label === 'dark'}" v-for="(item, index) in publicList">
+      <div class="publicCnt" :class="{rightTranslate:index%2==0,leftTranslate:index%2==1,shadowLight:themeStore.theme.label === 'light',shadowDark:themeStore.theme.label === 'dark'}" v-for="(item, index) in publicList" @click="router.push(`/mainBox/${item.id}`)">
         <div v-show="index % 2 == 0" class="left">
           <div class="imgCnt">
             <img :src="item?.url" alt="">
