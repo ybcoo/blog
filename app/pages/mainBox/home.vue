@@ -9,6 +9,33 @@
         personal corner. I’m someone who values work-life
         balance, and I’ll share my life, what I see, what I feel, and what I
         love here.</span>
+      <div class="hobbyCnt">
+        <div class="hobbyRow">
+          <div class="dot"></div>
+          <img class="hobbyIcon" :src="hobbyIcon.music" alt="">
+          <span :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">I’m into rock（逃跑计划、痛仰...） and
+            R&B（方大同...）.</span>
+        </div>
+        <div class="hobbyRow">
+          <div class="dot"></div>
+          <img class="hobbyIcon" :src="hobbyIcon.game" alt="">
+          <span :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">I got an Xbox for Black Myth:
+            Wukong & Palworld.</span>
+        </div>
+        <div class="hobbyRow">
+          <div class="dot"></div>
+          <img class="hobbyIcon" :src="hobbyIcon.camera" alt="">
+          <span :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">I love capturing roadside scenery
+            during travels.</span>
+        </div>
+        <div class="hobbyRow">
+          <div class="dot"></div>
+          <img class="hobbyIcon" :src="hobbyIcon.video" alt="">
+          <span :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">Record clips & binge shows in my
+            spare time.
+          </span>
+        </div>
+      </div>
       <span class="welcome" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">
         This is my second webpage project.</span>
       <ClientOnly>
@@ -36,17 +63,21 @@
 
       </ClientOnly>
       <section class="contact">
-        <h3 :class="{'bigTitle_sun':themeStore.theme.label === 'light','bigTitle_moon':themeStore.theme.label === 'dark'}" >Contact Me：</h3>
+        <h3
+          :class="{ 'bigTitle_sun': themeStore.theme.label === 'light', 'bigTitle_moon': themeStore.theme.label === 'dark' }">
+          Contact Me：</h3>
         <div class="contactCnt" @click="handleToGithub">
           <img :src="githubUrl" alt="" class="contactIcon">
         </div>
-        <div style="margin-left: 10px;" class="contactCnt" @click="showMail=!showMail">
-          <img :src="gmailUrl" alt="" class="contactIcon">   
+        <div style="margin-left: 10px;" class="contactCnt" @click="showMail = !showMail">
+          <img :src="gmailUrl" alt="" class="contactIcon">
         </div>
-        <div style="margin-left: 10px;" class="mailCnt" :style="{backgroundColor:showMail?'white':'transparent'}">
-          <span :class="{'font_sun':themeStore.theme.label === 'light','font_moon':themeStore.theme.label === 'dark','opacity-show':showMail,'opacity-hide':!showMail}" >yubingcaoopen@gmail.com</span>
+        <div style="margin-left: 10px;" class="mailCnt"
+          :style="{ backgroundColor: showMail ? 'white' : 'transparent' }">
+          <span
+            :class="{ 'font_sun': themeStore.theme.label === 'light', 'font_moon': themeStore.theme.label === 'dark', 'opacity-show': showMail, 'opacity-hide': !showMail }">yubingcaoopen@gmail.com</span>
         </div>
-        
+
       </section>
     </article>
     <section class="bottomCnt">
@@ -99,7 +130,7 @@
                 <span class="text-omit html-content" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'
                   " style="padding-top: 5px; padding-bottom: 5px" v-html="item.content"></span>
                 <div class="hiddenImg">
-                  <img class="coverImg" :style="{opacity:!item?.url?0:1}" :src="item.url" alt="no data">
+                  <img class="coverImg" :style="{ opacity: !item?.url ? 0 : 1 }" :src="item.url" alt="no data">
                   <LOCK border-radius="10" v-show="item.type == 'diary'" />
                 </div>
                 <LOCK border-radius="8" v-show="item.type == 'diary'" />
@@ -154,7 +185,7 @@ import { timeHooks } from "~/hooks/timeHooks";
 import Loading from "~~/components/Loading.vue";
 import LOCK from '~~/components/lock.vue'
 import alert from '~~/components/alert.vue'
-import { gmail,github } from "~/assets/icon/svg";
+import { gmail, github, hobbyIcon } from "~/assets/icon/svg";
 const { formatTimestampToDate } = timeHooks();
 let {
   pageNum,
@@ -170,15 +201,15 @@ let {
   showLoading,
   getAllArticle
 } = homeHooks();
-const showEncode=ref(false)
+const showEncode = ref(false)
 const router = useRouter();
 const themeStore = useThemeStore();
 const leftDisabled = ref(true);
 const rightDisabled = ref(false);
 await setLoopList();
 moreLines.value.push(...textList.value);
-const showMail=ref(false)
-const handleToGithub=()=>{
+const showMail = ref(false)
+const handleToGithub = () => {
   window.open('https://github.com/ybcoo?tab=repositories', '_blank')
 }
 const leftArrowStyle = computed(() => {
@@ -232,9 +263,9 @@ const handleRightArrow = () => {
     rightDisabled.value = true;
   }
 };
-const handleClickArticle=(item)=>{
-  if(item?.type=='diary'){
-    showEncode.value=true
+const handleClickArticle = (item) => {
+  if (item?.type == 'diary') {
+    showEncode.value = true
     return
   }
   router.push(`/mainBox/${item.id}`)
@@ -264,11 +295,11 @@ const scrollUp = async () => {
 };
 const allArticle = ref(await getAllArticle())
 console.log(allArticle)
-const githubUrl=computed(()=>{
-  return  themeStore.theme.label === 'light'? github?.dark:github?.light
+const githubUrl = computed(() => {
+  return themeStore.theme.label === 'light' ? github?.dark : github?.light
 })
-const gmailUrl=computed(()=>{
-  return themeStore.theme.label === 'light'? gmail?.dark:gmail?.light
+const gmailUrl = computed(() => {
+  return themeStore.theme.label === 'light' ? gmail?.dark : gmail?.light
 })
 getArticleList();
 </script>
@@ -281,6 +312,30 @@ getArticleList();
   margin-left: 20px;
 }
 
+.hobbyCnt {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  .hobbyRow {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .hobbyIcon {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+  }
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #d4d4d4;
+}
+
 .welcome {
   font-size: 20px;
   width: 100%;
@@ -288,40 +343,49 @@ getArticleList();
   white-space: pre-wrap;
   flex-wrap: wrap;
 }
-.contact{
+
+.contact {
   padding: 10px 0;
   width: 100%;
   display: flex;
   align-items: center;
-  .contactCnt{
+
+  .contactCnt {
     width: 24px;
     height: 24px;
-    &:hover{
+
+    &:hover {
       cursor: pointer;
       scale: (1.2);
     }
+
     border-radius: 50%;
     overflow: hidden;
-    .contactIcon{
+
+    .contactIcon {
       width: 100%;
       height: 100%;
     }
   }
 }
-.mailCnt{
+
+.mailCnt {
   display: flex;
   align-items: center;
   border-radius: 30px;
   padding: 2px 8px;
 }
-.opacity-show{
+
+.opacity-show {
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
 }
-.opacity-hide{
+
+.opacity-hide {
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
 }
+
 .hiddenImg {
   position: absolute;
   display: flex;
