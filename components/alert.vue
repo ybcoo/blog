@@ -10,7 +10,7 @@
                 </div>
             </div>
             <div class="middle">
-                <input :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'" class="input" type="password" placeholder="请输入密码以解密">
+                <input v-model="password" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'" class="input" type="password" placeholder="请输入密码以解密">
                 <div class="errorIcon" v-show="showError">
                     <img class="errorImg" :src="errorIcon.default" alt="">
                     <span >encode fail</span>
@@ -19,7 +19,7 @@
             <div class="footer">
                 <div class="btnCnt">
                     <button :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'" class="cancel btn" @click="handleCancel">cancel</button>
-                    <button :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'" class="confirm btn" @click="showError=true">confirm</button>
+                    <button :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'" class="confirm btn" @click="handleConfirm">confirm</button>
                 </div>
             </div>
         </div>
@@ -34,10 +34,16 @@ defineProps<{
 const emit = defineEmits<{
     (e:'update:showEncode',value:any):any
 }>()
+const password=ref('')
 const themeStore = useThemeStore()
 const handleCancel=()=>{
     emit('update:showEncode',false)
     showError.value=false
+    password.value=''
+}
+const handleConfirm=()=>{
+    showError.value=true
+    password.value=''
 }
 const showError=ref(false)
 </script>
