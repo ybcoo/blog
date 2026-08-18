@@ -307,7 +307,7 @@ const scrollUp = async () => {
   currentScrollIndex.value = -1;
   isScrolling.value = false;
 };
-const allArticle = ref(await getAllArticle())
+const allArticle = ref(await getAllArticle()||[])
 console.log(allArticle)
 const githubUrl = computed(() => {
   return themeStore.theme.label === 'light' ? github?.dark : github?.light
