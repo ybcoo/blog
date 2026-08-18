@@ -1,21 +1,21 @@
 <template>
-    <div class="commentContainer" :class="{'flex-end':!props?.list?.length,'flex-start':props?.list?.length}">
-       <!-- <div class="listCnt" v-if="props?.list?.length"> -->
-        <div class="itemCnt" v-for="(item,index) in props.list" :key="index">
+    <div class="commentContainer" :class="{ 'flex-end': !props?.list?.length, 'flex-start': props?.list?.length }">
+        <!-- <div class="listCnt" v-if="props?.list?.length"> -->
+        <div class="itemCnt" v-for="(item, index) in props.list" :key="index">
             <div class="avatarCntSmall">
-                <img :src="item.avatarUrl" alt="no data" class="avatar">
+                <img :src="item.url" alt="no data" class="avatar">
             </div>
-            <span class="span">{{item.inputVal}}</span>
+            <span class="span">{{ item.content }}</span>
         </div>
-       <!-- </div> -->
+        <!-- </div> -->
         <div class="rocketCnt" ref="rocketRef">
-            <div  @mouseenter="isHover=true" class="rocketIcon"  @click="isHover=!isHover">
+            <div @mouseenter="isHover = true" class="rocketIcon" @click="isHover = !isHover">
                 <img class="default" :src="rocket.default" alt="">
                 <img class="hover" :src="rocket.hover" alt="">
             </div>
 
-            <div class="inputCnt"  :class="{show:isHover,hidden:!isHover}">
-                <div class="avatarCnt" :class="{pointer:isHover}">
+            <div class="inputCnt" :class="{ show: isHover, hidden: !isHover }">
+                <div class="avatarCnt" :class="{ pointer: isHover }">
                     <img class="avatar" :src="commentUser.avatarUrl" alt="no data" @click="changeAvatar">
                 </div>
                 <div class="inputBox">
@@ -23,10 +23,10 @@
                 </div>
                 <div class="smile"></div>
                 <div class="iconCnt">
-                    <div class="yes" :class="{pointer:isHover}" @click="handleClickYes">
-                        <img class="check" :src="yes.default"  alt="">
+                    <div class="yes" :class="{ pointer: isHover }" @click="handleClickYes">
+                        <img class="check" :src="yes.default" alt="">
                     </div>
-                    <div class="no" :class="{pointer:isHover}" @click="isHover=false">
+                    <div class="no" :class="{ pointer: isHover }" @click="isHover = false">
                         <img class="check" :src="no.default" alt="">
                     </div>
                 </div>
@@ -38,53 +38,68 @@
 <script setup lang="ts">
 import { rocket } from '~/assets/icon/svg';
 import { yes, no } from '~/assets/icon/svg';
-const props=defineProps<{
-    list:any
+import { createComment, getComment } from '~~/util/api';
+import { commentHooks } from '~/hooks/commentHooks';
+const {handleCreateComment,getCommentList}=commentHooks()
+const props = defineProps<{
+    list: any,
+    articleId:any
 }>()
 
-const emit=defineEmits<{
-    (e:'update:list',value:any):any
+const emit = defineEmits<{
+    (e: 'update:list', value: any): any
 }>()
 const getAvatar = () => {
     return `https://picsum.photos/200/200?random=${Math.random()}`
 }
 //实则为是否显示不代表悬停
-const isHover=ref(false)
+const isHover = ref(false)
 // const inputVal=ref('')
 // const avatarUrl = ref(getAvatar())
-const commentUser=reactive<any>({
-    inputVal:'',
-    avatarUrl:getAvatar()
+const commentUser = reactive<any>({
+    inputVal: '',
+    avatarUrl: getAvatar()
 })
-const rocketRef=ref<HTMLElement|null>(null)
+const rocketRef = ref<HTMLElement | null>(null)
 const changeAvatar = () => {
     commentUser.avatarUrl = getAvatar()
 }
-const handleClickOutside=(e:MouseEvent)=>{
-    if(rocketRef.value&&!rocketRef.value.contains(e.target as Node)){
-        isHover.value=false
+const handleClickOutside = (e: MouseEvent) => {
+    if (rocketRef.value && !rocketRef.value.contains(e.target as Node)) {
+        isHover.value = false
     }
 }
-const handleClickYes=()=>{
-    emit('update:list',[...props.list,{avatarUrl:commentUser.avatarUrl,inputVal:commentUser.inputVal}])
-    commentUser.inputVal=''
+const handleClickYes = async () => {
+    if (!commentUser.inputVal||commentUser.inputVal.length>50) {
+        return
+    }
+    
+        // const await createComment({ content: commentUser.inputVal, url: commentUser.avatarUrl })
+    const result=await handleCreateComment({ content: commentUser.inputVal, url: commentUser.avatarUrl,articleId:props.articleId })
+    
+    const commentList=await getCommentList(props?.articleId)
+    // console.log('udate-',commentList)
+    emit('update:list',commentList)
+    
+    commentUser.inputVal = ''
     changeAvatar()
-    isHover.value=false
+    isHover.value = false
 }
-onMounted(()=>{
-    document.addEventListener('click',handleClickOutside)
+onMounted(() => {
+    document.addEventListener('click', handleClickOutside)
 })
-onUnmounted(()=>{
-    document.removeEventListener('click',handleClickOutside)
+onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside)
 })
 </script>
 <style lang="scss" scoped>
-.listCnt{
+.listCnt {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
 }
-.itemCnt{
+
+.itemCnt {
     background-color: white;
     border-radius: 30px;
     padding: 4px;
@@ -92,6 +107,7 @@ onUnmounted(()=>{
     align-items: center;
     gap: 4px;
 }
+
 .commentContainer {
     width: 100%;
     display: flex;
@@ -99,36 +115,44 @@ onUnmounted(()=>{
     // padding: 0 20px;
     // padding-right: 25%;
 }
-.flex-end{
+
+.flex-end {
     justify-content: flex-end;
 }
-.flex-start{
+
+.flex-start {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
     justify-content: flex-start;
 }
+
 .avatarCnt {
     border-radius: 50%;
     overflow: hidden;
     display: flex;
+
     .avatar {
         width: 24px;
         height: 24px;
     }
 }
+
 .avatarCntSmall {
     border-radius: 50%;
     overflow: hidden;
     display: flex;
+
     .avatar {
         width: 20px;
         height: 20px;
     }
 }
-.span{
+
+.span {
     font-size: 12px;
 }
+
 .check {
     width: 16px;
     height: 16px;
@@ -158,9 +182,11 @@ onUnmounted(()=>{
     border: #c80102 solid 1px;
     border-radius: 50%;
 }
-.pointer{
+
+.pointer {
     cursor: pointer;
 }
+
 .rocketCnt {
     display: flex;
     position: relative;
@@ -200,8 +226,9 @@ onUnmounted(()=>{
         top: 40px;
         justify-content: space-between;
         transition:
-      opacity .5s ease,
-      transform .5s ease;
+            opacity .5s ease,
+            transform .5s ease;
+
         .inputBox {
             display: flex;
             padding: 0 8px;
@@ -213,14 +240,17 @@ onUnmounted(()=>{
             font-size: 12px;
         }
     }
-    .show{
+
+    .show {
         opacity: 1;
         transform: translateY(0);
     }
-    .hidden{
+
+    .hidden {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     .default {
         position: absolute;
         padding: 8px;

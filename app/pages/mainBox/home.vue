@@ -175,13 +175,14 @@
 
     <Loading v-show="showLoading" />
   </main>
-  <alert v-model:showEncode="showEncode"></alert>
+  <alert v-model:showEncode="showEncode" :articleId="articleId"></alert>
 </template>
 <script setup>
 // import { ref, computed } from "vue";
 import { useThemeStore } from "~~/stores/theme";
 import { homeHooks } from "~~/app/hooks/homeHooks";
 import { timeHooks } from "~/hooks/timeHooks";
+import { checkPermit } from '~~/util/api'
 import Loading from "~~/components/Loading.vue";
 import LOCK from '~~/components/lock.vue'
 import alert from '~~/components/alert.vue'
@@ -206,6 +207,7 @@ const router = useRouter();
 const themeStore = useThemeStore();
 const leftDisabled = ref(true);
 const rightDisabled = ref(false);
+const articleId=ref(null)
 await setLoopList();
 moreLines.value.push(...textList.value);
 const showMail = ref(false)
@@ -263,9 +265,21 @@ const handleRightArrow = () => {
     rightDisabled.value = true;
   }
 };
-const handleClickArticle = (item) => {
+const handleClickArticle = async (item) => {
   if (item?.type == 'diary') {
-    showEncode.value = true
+    try {
+      articleId.value=item?.id
+      const encode = localStorage.getItem('encode')
+      const data = await checkPermit({ encode })
+      if (data.code === 0) {
+        router.push(`/mainBox/${item.id}`)
+      } else {
+        showEncode.value = true
+      }
+    } catch (e) {
+      console.error(e)
+    }
+
     return
   }
   router.push(`/mainBox/${item.id}`)
@@ -316,6 +330,7 @@ getArticleList();
   display: flex;
   flex-direction: column;
   gap: 5px;
+
   .hobbyRow {
     display: flex;
     gap: 10px;
@@ -438,7 +453,7 @@ getArticleList();
 
 .bottomCnt {
   width: 100%;
-  min-height: 100vh;
+  // min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -499,6 +514,7 @@ getArticleList();
   justify-content: center;
   overflow: hidden;
   min-height: 100px;
+  padding: 40px 0;
   // padding: 20px 20px 0 20px;
 }
 

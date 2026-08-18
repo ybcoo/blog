@@ -28,8 +28,11 @@
 <script setup lang="ts">
 import { cancelIcon,errorIcon } from "~/assets/icon/svg";
 import { useThemeStore } from "~~/stores/theme";
-defineProps<{
-    showEncode?: boolean
+import { checkPermit } from "~~/util/api";
+const router = useRouter();
+const props = defineProps<{
+    showEncode?: boolean,
+    articleId?:number
 }>()
 const emit = defineEmits<{
     (e:'update:showEncode',value:any):any
@@ -41,9 +44,21 @@ const handleCancel=()=>{
     showError.value=false
     password.value=''
 }
-const handleConfirm=()=>{
-    showError.value=true
-    password.value=''
+const handleConfirm=async()=>{
+    try{
+        const data:any=await checkPermit({encode:password.value})
+        if(data?.code==0){
+            emit('update:showEncode',false)
+            localStorage.setItem('encode',password.value)
+            router.push(`/mainBox/${props?.articleId}`)
+        }else{
+            showError.value=true
+        }
+        password.value=''
+    }catch(e){
+        console.error(e)
+    }
+    
 }
 const showError=ref(false)
 </script>

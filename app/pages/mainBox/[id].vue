@@ -32,6 +32,7 @@ const getArticleDetail=async()=>{
         id: Number(useRoute().params.id),
         pageNum: 1,
         pageSize: 1,
+        encode:localStorage.getItem('encode')
       });
       if (error.value) {
         console.error("Failed to fetch articles:", error.value);

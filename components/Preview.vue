@@ -43,12 +43,14 @@
         v-html="form?.content"
       ></div>
     </div>
-    <Comment v-model:list="commentList"/>
+    <Comment v-model:list="commentList" :articleId="form?.id"/>
   </div>
 </template>
 <script setup lang="ts">
 import { useThemeStore } from "~~/stores/theme";
 import Comment from '../components/comment.vue'
+import {commentHooks} from '~~/app/hooks/commentHooks'
+const {getCommentList}=commentHooks()
 const themeStore = useThemeStore();
 const commentList = ref<any>([])
 interface formType {
@@ -60,9 +62,10 @@ interface formType {
   url: string;
   content: string;
 }
-defineProps<{
+const props=defineProps<{
   form?: formType | null;
 }>();
+commentList.value=await getCommentList(props?.form?.id)
 const typeMap: any = {
   travel: "For Travel Moments",
   daily: "For Daily Life Snippets",

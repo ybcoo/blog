@@ -9,6 +9,7 @@ import {
   SystemMessage,
   AIMessage,
 } from "@langchain/core/messages";
+import {getResponse} from './api'
 // ============= 创建千问聊天模型 =============
 // const chat = new ChatOpenAI({
 //   model: "qwen3.5-plus",
@@ -28,7 +29,7 @@ const chat = new ChatOpenAI({
 export const chatHooks = () => {
   // 系统提示词（设定 AI 角色）
 
-  let systemPrompt: any =new SystemMessage('你是一个友好、专业的AI助手名字叫fish，乐于助人，回答简洁明了,少推理快速回答。')
+  let systemPrompt: any =new SystemMessage('你是一个友好、专业的AI助手名字叫fish，乐于助人，回答说中文简洁明了,少推理快速回答。')
 
   // 用简单数组存储对话历史
   let history: any = [];
@@ -40,19 +41,20 @@ export const chatHooks = () => {
     try {
       // 构建消息列表：系统提示词 + 历史 + 新消息
       const messages = [systemPrompt, ...history, new HumanMessage(message)];
-
-      const response = await chat.invoke(messages);
-
+      // console.log('messages',messages)
+      const data=await getResponse({messages})
+      // const response = await chat.invoke(messages);
+      const {response}=data
       // 保存到历史
       history.push(new HumanMessage(message));
       history.push(response);
-
+      // console.log(response)
       // 限制历史长度，避免 token 过大
       if (history.length > 20) {
         history = history.slice(-20);
       }
-
-      return response.content;
+      const content=response.kwargs.content
+      return content;
     } catch (e) {
       console.error(e);
       return "AI服务异常，请稍后再试";

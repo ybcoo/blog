@@ -26,3 +26,35 @@ export const getPublicArticle = (query?: any) => {
     params: query,
   });
 };
+export const createComment=(body?:any)=>{
+  const apiUrl = `${baseUrl}/blogApi/createComment`;
+  return useFetch(apiUrl, {
+    // baseUrl,
+    method: "post",
+    body
+  });
+}
+export const getComment=(query?:any)=>{
+  const apiUrl = `${baseUrl}/blogApi/getComment`;
+  return $fetch(apiUrl, {
+    // baseUrl,
+    method: "get",
+    params:query
+  });
+}
+export const getResponse=(body?:any)=>{
+  const apiUrl = `${baseUrl}/blogApi/getResponse`;
+  return $fetch(apiUrl, {
+    // baseUrl,
+    method: "post",
+    body
+  });
+}
+export const checkPermit=(body?:any)=>{
+  const apiUrl = `${baseUrl}/blogApi/checkPermit`;
+  return $fetch(apiUrl, {
+    // baseUrl,
+    method: "post",
+    body
+  });
+}

@@ -1,7 +1,7 @@
 <template>
   <main class="main">
     <section class="header"></section>
-    <section class="middle" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'" :style="{
+    <!-- <section class="middle" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'" :style="{
       borderColor: themeStore.theme.label === 'light' ? '#eee9e4' : '#232b1c',
     }">
       <div class="publicCnt" :class="{rightTranslate:index%2==0,leftTranslate:index%2==1,shadowLight:themeStore.theme.label === 'light',shadowDark:themeStore.theme.label === 'dark'}" v-for="(item, index) in publicList" @click="router.push(`/mainBox/${item.id}`)">
@@ -42,6 +42,22 @@
           </div>
         </div>
       </div>
+    </section> -->
+    <section ref="middleRef" class="middle" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'" :style="{
+      borderColor: themeStore.theme.label === 'light' ? '#eee9e4' : '#232b1c',
+    }">
+    <div class="colCnt" v-for="(i,countIndex) in columnCount">
+      <div class="colItem" v-for="(item,index) in loopList[countIndex]" @click="router.push(`/mainBox/${item.id}`)">
+        <div class="imgCard" :style="{aspectRatio:1 / item?.ratio}">
+          <img class="imgItem" :src="item.url" alt="">
+        </div>
+        <div class="textCard">
+          <h6 class="text-omit" :class="{ 'bigTitle_sun': themeStore.theme.label === 'light', 'bigTitle_moon': themeStore.theme.label === 'dark' }">{{ item.title }}</h6>
+          <span class="html-content text-omit ftsize" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'
+              " v-html="item?.content"></span>
+        </div>
+      </div>
+    </div>
     </section>
     <Loading v-show="showLoading" />
   </main>
@@ -62,6 +78,40 @@ const memoryList = ref<Array<any>>([]);
 const diaryList = ref<Array<any>>([]);
 const experienceList = ref<Array<any>>([]);
 const publicList = ref<Array<any>>([]);
+const middleRef=ref<HTMLElement | null>(null)
+const minWidth=175
+const columnCount=ref(1)
+let resizeObserver:ResizeObserver | null = null
+let loopList=ref<any>(Array.from({length:columnCount.value},()=>[]))
+const updateColumnCount=()=>{
+  if(!middleRef.value)return
+  // 读取 middle 最终生效的 css 样式
+  const style=getComputedStyle(middleRef.value)
+  const gap=10
+  const width=middleRef.value.clientWidth
+  columnCount.value=Math.min(Math.floor((width + gap) / (minWidth + gap)),publicList.value.length)
+  divideList()
+  // console.log(columnCount.value)
+}
+const divideList=()=>{
+  loopList.value=Array.from({length:columnCount.value},()=>[])
+  publicList.value.forEach((i,index)=>{
+    loopList.value[index%columnCount.value].push(i)
+  })
+}
+const calculateRatio=async(item:any)=>{
+  const ratio=await new Promise<number>((resolve, reject) => {
+    const img=new Image()
+    img.onload=()=>{
+      resolve(img.naturalHeight/img.naturalWidth)
+    }
+    img.onerror=()=>{
+      resolve(1)
+    }
+    img.src=item.url
+  })
+  return ratio
+}
 const getPublic = async () => {
   try {
     showLoading.value = true;
@@ -71,7 +121,15 @@ const getPublic = async () => {
     }
     const { code, result } = data?.value ?? ({} as any);
     const { list = [] } = result || {};
-    publicList.value = list
+    const newlist=await Promise.all(list.map(async(item:any)=>{
+      const ratio=await calculateRatio(item)
+      return {
+        ...item,
+        ratio
+      }
+    }))
+    // console.log('newlist->',newlist)
+    publicList.value = newlist
   } catch (e) {
     console.error(e);
   } finally {
@@ -98,8 +156,24 @@ const getArticleDetail = async () => {
     showLoading.value = false;
   }
 };
+onMounted(()=>{
+  if(!middleRef.value)return
+  updateColumnCount()
+  // 创建一个“尺寸监听器”
+  // 只要 middle 的宽度/高度发生变化，这里就会触发
+  resizeObserver=new ResizeObserver(()=>{
+    updateColumnCount()
+  })
+  // 开始监听 middle 这个元素
+  resizeObserver.observe(middleRef.value)
+})
+onBeforeUnmount(()=>{
+  // 停止监听，防止内存泄漏
+  resizeObserver?.disconnect()
+  resizeObserver=null
+})
 getArticleDetail();
-getPublic()
+await getPublic()
 </script>
 <style lang="scss" scoped>
 .main {
@@ -120,19 +194,58 @@ getPublic()
   -ms-overflow-style: none;
 
   .header {
-    // padding-top: 200px;
+     padding-top: 200px;
   }
 
   .middle {
     // border: 2px solid ;
     display: flex;
     padding: 40px 100px;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
+    gap: 10px;
     // overflow-y: auto;
     // border-radius: 24px;
-
+    .colCnt{
+      display: flex;
+      flex: 1;
+      min-width: 0;
+      flex-direction: column;
+      gap:10px;
+      overflow: hidden;
+      .imgCard{
+        display: flex;
+        overflow: hidden;
+        .imgItem{
+          width: 100%;
+          height: 100%;
+          transition: transform 0.3s ease;
+        }
+      }
+      .colItem{
+        &:hover{
+          cursor: pointer;
+          .imgItem{
+            transform: scale(1.1);
+          }
+          .textCard{
+            transform: scale(1.05);
+          }
+        }
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .textCard{
+        display: flex;
+        transition: transform 0.3s ease;
+        background: rgba(255,255,255,0.3);
+        flex-direction: column;
+        padding: 3px 6px;
+        overflow: hidden;
+        .ftsize{
+          font-size: 13px;
+        }
+      }
+      
+    }
   }
 }
 .shadowLight{

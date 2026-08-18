@@ -107,7 +107,7 @@ const getUserIcon = computed(() => {
     : manageIcon.default_moon;
 });
 setSystemMessage(
-  `你叫fish,是摘要文章机器人,别人会问你左边的文章帮我概括下,然后这个文章是我v-html也就是content属性进来的,所以你要自己去解析理解内容意思,那好你清楚了背景,我会给你个js对象 title是标题,type是类型,content是内容,其他属性不用管,v-html里有图片能解析出来就介绍,没有就不用 下面这就是js ${JSON.stringify(props?.formItem)}`,
+  `你叫fish,是摘要文章机器人,回答要说中文,别人会问你左边的文章帮我概括下,然后这个文章是我v-html也就是content属性进来的,所以你要自己去解析理解内容意思,那好你清楚了背景,我会给你个js对象 title是标题,type是类型,content是内容,其他属性不用管,v-html里有图片能解析出来就介绍,没有就不用 下面这就是js ${JSON.stringify(props?.formItem)}`,
 );
 
 const sendMessage = async () => {

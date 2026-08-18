@@ -83,6 +83,7 @@ export const homeHooks = () => {
       }
       const { code, result } = data?.value ?? ({} as any);
       const { list = [] } = result || {};
+      //要想显示有效数据得大于5条
       if (code === 0 && list.length > 5) {
         textList.value = list.slice(0, 5);
         moreLines.value = list.slice(5);
