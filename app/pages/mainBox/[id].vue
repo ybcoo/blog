@@ -26,6 +26,8 @@ const resultDefault:any={
       type:'experience',
     }
 const formItem=ref<formType|null>(resultDefault)
+const route=useRoute()
+
 const getArticleDetail=async()=>{
   try{
     const encodeCookie = useCookie('encode')
@@ -49,6 +51,16 @@ const getArticleDetail=async()=>{
   }
 }
 await getArticleDetail()
+useSeoMeta({
+  title: () => formItem?.value?.title || '文章标题',
+  description: () => '.......',
+  ogTitle: () => formItem?.value?.title || '文章标题',
+  ogDescription: () => '.......',
+  ogImage: () => formItem?.value?.url || '',
+  ogUrl: () => `https://blog.ybcfish.cloud/mainBox/${route?.params?.id}`,
+  ogType: 'article',
+  twitterCard: 'summary_large_image'
+})
 // const { data, error } = await getExperienceArticle()
 // watch(()=>data.value,(res)=>{
 //   if(!res)return
