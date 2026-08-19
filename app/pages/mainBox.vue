@@ -223,7 +223,7 @@ const handleToManage = () => {
   /* flex-direction: column; */
   justify-content: center;
   padding-right: 20%;
-  align-items: stretch;
+  align-items: flex-start;
   overflow-y: auto;
 
   &::-webkit-scrollbar {
