@@ -157,7 +157,7 @@ const getArticleDetail = async () => {
   }
 };
 onMounted(()=>{
-  minWidth= window.innerWidth < 768 ? 150 : 175
+  minWidth= window.innerWidth < 768 ? 140 : 175
   if(!middleRef.value)return
   updateColumnCount()
   // 创建一个“尺寸监听器”

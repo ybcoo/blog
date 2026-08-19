@@ -14,7 +14,7 @@
                 <img class="hover" :src="rocket.hover" alt="">
             </div>
 
-            <div class="inputCnt" :class="{ show: isHover, hidden: !isHover }">
+            <div class="inputCnt" :class="{ show: isHover, hidden: !isHover,mediaRule:list.length==0 }">
                 <div class="avatarCnt" :class="{ pointer: isHover }">
                     <img class="avatar" :src="commentUser.avatarUrl" alt="no data" @click="changeAvatar">
                 </div>
@@ -231,7 +231,7 @@ onUnmounted(() => {
         transition:
             opacity .5s ease,
             transform .5s ease;
-
+        
         .inputBox {
             display: flex;
             padding: 0 8px;
@@ -243,15 +243,23 @@ onUnmounted(() => {
             font-size: 12px;
         }
     }
-
+    .mediaRule{
+        //表示只在移动端出现且数组为空的初始状态
+        @media (max-width:768px){
+            top:50%;
+            transform:translateX(-102%) translateY(-50%) !important;
+        }
+    }
     .show {
         opacity: 1;
-        transform: translateY(0);
+        // 为兼容移动端而关闭该动效
+        // transform: translateY(0);
     }
 
     .hidden {
         opacity: 0;
-        transform: translateY(-10px);
+        // 为兼容移动端而关闭该动效
+        // transform: translateY(-10px);
     }
 
     .default {
