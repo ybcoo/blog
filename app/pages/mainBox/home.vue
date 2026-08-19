@@ -271,7 +271,8 @@ const handleClickArticle = async (item) => {
   if (item?.type == 'diary') {
     try {
       articleId.value=item?.id
-      const encode = localStorage.getItem('encode')
+      const encodeCookie = useCookie('encode')
+      const encode = encodeCookie.value
       const data = await checkPermit({ encode })
       if (data.code === 0) {
         router.push(`/mainBox/${item.id}`)

@@ -49,7 +49,8 @@ const handleConfirm=async()=>{
         const data:any=await checkPermit({encode:password.value})
         if(data?.code==0){
             emit('update:showEncode',false)
-            localStorage.setItem('encode',password.value)
+            const encodeCookie = useCookie('encode')
+            encodeCookie.value=password.value
             router.push(`/mainBox/${props?.articleId}`)
         }else{
             showError.value=true

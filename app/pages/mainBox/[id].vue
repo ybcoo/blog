@@ -28,11 +28,13 @@ const resultDefault:any={
 const formItem=ref<formType|null>(resultDefault)
 const getArticleDetail=async()=>{
   try{
+    const encodeCookie = useCookie('encode')
+    const encode=encodeCookie.value
     const { data, error } = await getArticle({
         id: Number(useRoute().params.id),
         pageNum: 1,
         pageSize: 1,
-        encode:localStorage.getItem('encode')
+        encode:encode
       });
       if (error.value) {
         console.error("Failed to fetch articles:", error.value);
