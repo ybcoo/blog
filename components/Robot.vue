@@ -133,6 +133,9 @@ const sendMessage = async () => {
   position: fixed;
   bottom: 40px;
   right: 40px;
+  @media (max-width: 768px) {
+      right: 10px;
+  }
   .row {
     display: flex;
     flex-direction: column;
@@ -140,6 +143,9 @@ const sendMessage = async () => {
     opacity: 0.5;
     .robotTitle {
       font-weight: 500;
+      @media (max-width: 768px) {
+        font-size: 12px;
+      }
     }
   }
   .chatContent {
@@ -240,6 +246,10 @@ const sendMessage = async () => {
 .iconContainer {
   width: 50px;
   height: 50px;
+  @media (max-width: 768px) {
+      width: 32px;
+      height: 32px;
+  }
   .robotIcon {
     width: 100%;
     height: 100%;

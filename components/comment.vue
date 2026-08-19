@@ -118,6 +118,9 @@ onUnmounted(() => {
 
 .flex-end {
     justify-content: flex-end;
+    @media (max-width: 768px) {
+        // justify-content: flex-start;
+    }
 }
 
 .flex-start {

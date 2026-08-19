@@ -79,7 +79,7 @@ const diaryList = ref<Array<any>>([]);
 const experienceList = ref<Array<any>>([]);
 const publicList = ref<Array<any>>([]);
 const middleRef=ref<HTMLElement | null>(null)
-const minWidth=175
+let minWidth=175
 const columnCount=ref(1)
 let resizeObserver:ResizeObserver | null = null
 let loopList=ref<any>(Array.from({length:columnCount.value},()=>[]))
@@ -157,6 +157,7 @@ const getArticleDetail = async () => {
   }
 };
 onMounted(()=>{
+  minWidth= window.innerWidth < 768 ? 150 : 175
   if(!middleRef.value)return
   updateColumnCount()
   // 创建一个“尺寸监听器”
@@ -195,15 +196,22 @@ await getPublic()
 
   .header {
      padding-top: 200px;
+    @media (max-width: 768px) {
+      padding: 5px 0;  
+    }
   }
 
   .middle {
     // border: 2px solid ;
     display: flex;
-    padding: 40px 100px;
+    // padding: 40px 40px;
+    padding: 0;
     gap: 10px;
     // overflow-y: auto;
     // border-radius: 24px;
+    @media (max-width: 768px) {
+      width: 100%;
+    }
     .colCnt{
       display: flex;
       flex: 1;

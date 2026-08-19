@@ -31,7 +31,8 @@
         {{ typeMap[(form?.type?.value || form?.type) as any] }}
       </h3>
     </div>
-    <div
+    <div class="contentAndRocketCnt">
+      <div
       class="content html-content"
       :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'"
       :style="{
@@ -44,6 +45,8 @@
       ></div>
     </div>
     <Comment v-model:list="commentList" :articleId="form?.id"/>
+    </div>
+    
   </div>
 </template>
 <script setup lang="ts">
@@ -135,6 +138,11 @@ const typeMap: any = {
       font-weight: 600;
     }
   }
+}
+.contentAndRocketCnt{
+  display: flex;
+  flex-direction: column;
+  gap:10px
 }
 .content :deep(img),
 .content :deep(video) {

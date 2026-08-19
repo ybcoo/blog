@@ -13,33 +13,33 @@
         <div class="hobbyRow">
           <div class="dot"></div>
           <img class="hobbyIcon" :src="hobbyIcon.music" alt="">
-          <span :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">I’m into rock（逃跑计划、痛仰...） and
+          <span class="text-omit" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">I’m into rock（逃跑计划、痛仰...） and
             R&B（方大同...）.</span>
         </div>
         <div class="hobbyRow">
           <div class="dot"></div>
           <img class="hobbyIcon" :src="hobbyIcon.game" alt="">
-          <span :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">I got an Xbox for Black Myth:
+          <span class="text-omit" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">I got an Xbox for Black Myth:
             Wukong & Palworld.</span>
         </div>
         <div class="hobbyRow">
           <div class="dot"></div>
           <img class="hobbyIcon" :src="hobbyIcon.camera" alt="">
-          <span :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">I love capturing roadside scenery
+          <span class="text-omit" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">I love capturing roadside scenery
             during travels.</span>
         </div>
         <div class="hobbyRow">
           <div class="dot"></div>
           <img class="hobbyIcon" :src="hobbyIcon.video" alt="">
-          <span :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">Record clips & binge shows in my
+          <span class="text-omit" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">Record clips & binge shows in my
             spare time.
           </span>
         </div>
       </div>
-      <span class="welcome" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">
+      <span class="welcome text-omit" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">
         This is my second webpage project.</span>
       <ClientOnly>
-        <div style="width: 100%;">
+        <div style="width: 100%;display: flex;flex-direction: column;justify-content: space-between;gap:15px">
           <div class="scroller-container">
             <!-- 文本列表：v-for 每行都用同一个 class，动态加动画 -->
             <div class="text-list" :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'
@@ -64,6 +64,7 @@
       </ClientOnly>
       <section class="contact">
         <h3
+          style="white-space: nowrap;"
           :class="{ 'bigTitle_sun': themeStore.theme.label === 'light', 'bigTitle_moon': themeStore.theme.label === 'dark' }">
           Contact Me：</h3>
         <div class="contactCnt" @click="handleToGithub">
@@ -75,6 +76,7 @@
         <div style="margin-left: 10px;" class="mailCnt"
           :style="{ backgroundColor: showMail ? 'white' : 'transparent' }">
           <span
+            class="mailContent"
             :class="{ 'font_sun': themeStore.theme.label === 'light', 'font_moon': themeStore.theme.label === 'dark', 'opacity-show': showMail, 'opacity-hide': !showMail }">yubingcaoopen@gmail.com</span>
         </div>
 
@@ -166,7 +168,7 @@
       </section>
 
       <section class="footer flexCenter">
-        <span style="font-size: 14px; padding:0 0 20px 0"
+        <span class="text-omit" style="font-size: 14px; padding:0 0 20px 0"
           :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">Designed by Yu BingCao(Klein) in 2025
           years · comment</span>
       </section>
@@ -330,7 +332,7 @@ getArticleList();
   display: flex;
   flex-direction: column;
   gap: 5px;
-
+  width: 100%;
   .hobbyRow {
     display: flex;
     gap: 10px;
@@ -357,6 +359,9 @@ getArticleList();
   display: inline-block;
   white-space: pre-wrap;
   flex-wrap: wrap;
+  @media (max-width: 768px) {
+    font-size: 18px;
+  }
 }
 
 .contact {
@@ -364,7 +369,7 @@ getArticleList();
   width: 100%;
   display: flex;
   align-items: center;
-
+  flex-wrap: wrap;
   .contactCnt {
     width: 24px;
     height: 24px;
@@ -400,7 +405,11 @@ getArticleList();
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
 }
-
+.mailContent{
+  @media (max-width: 768px) {
+    // display: none;
+  }
+}
 .hiddenImg {
   position: absolute;
   display: flex;
@@ -410,7 +419,9 @@ getArticleList();
   top: 50%;
   transform: translateY(-50%);
   opacity: 0;
-
+  @media (max-width: 768px) {
+    display: none;
+  }
   // z-index: 10;
   .coverImg {
     width: 100px;
@@ -465,7 +476,7 @@ getArticleList();
   display: flex;
   flex-direction: column;
   // gap: 20px;
-  padding-top: 50px;
+  padding-top: 20px;
   justify-content: flex-start;
 }
 
@@ -605,11 +616,15 @@ getArticleList();
     align-items: flex-start;
     justify-content: space-between;
     gap: 20px;
-    flex-wrap: wrap;
-    min-height: 100vh;
+    // flex-wrap: wrap;
+    flex-shrink: 0;
+    // min-height: 100vh;
     width: 100%;
-    padding: 120px 44px 40px 44px;
-    overflow: hidden;
+    padding: 120px 44px 0px 44px;
+    @media (max-width: 768px) {
+      padding-top: 10px;
+    }
+    overflow-x: hidden;
   }
 
   @media (max-width: 768px) {
@@ -726,8 +741,8 @@ getArticleList();
   padding: 2px 2px;
   font-size: 12px;
   cursor: pointer;
-  margin-top: 15px;
-  margin-bottom: 15px;
+  // margin-top: 15px;
+  // margin-bottom: 15px;
   transition: transform 0.2s ease;
 
   &:active {

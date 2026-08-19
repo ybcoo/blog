@@ -1,5 +1,5 @@
 import { useFetch } from "#app";
-const isDev = true;
+const isDev = false;
 const baseUrl = isDev
   ? "http://localhost:3001"
   : "https://blogapi.ybcfish.cloud";
