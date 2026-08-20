@@ -51,11 +51,21 @@ const getArticleDetail=async()=>{
   }
 }
 await getArticleDetail()
+const htmlToText = (html = '') =>{
+  return  html
+    .replace(/<script[\s\S]*?<\/script>/gi, '')
+    .replace(/<style[\s\S]*?<\/style>/gi, '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 120)
+}
 useSeoMeta({
   title: () => formItem?.value?.title || '文章标题',
-  description: () => '.......',
+  description: () => htmlToText(formItem?.value?.content)||'.......',
   ogTitle: () => formItem?.value?.title || '文章标题',
-  ogDescription: () => '.......',
+  ogDescription: () => htmlToText(formItem?.value?.content)||'.......',
   ogImage: () => formItem?.value?.url || '',
   ogUrl: () => `https://blog.ybcfish.cloud/mainBox/${route?.params?.id}`,
   ogType: 'article',
