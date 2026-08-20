@@ -168,7 +168,7 @@
       </section>
 
       <section class="footer flexCenter">
-        <span class="text-omit" style="font-size: 14px; padding:0 0 20px 0"
+        <span class="text-omit" style="font-size: 14px; padding:0 0 20px 0;text-align: center;"
           :class="themeStore.theme.label === 'light' ? 'font_sun' : 'font_moon'">Designed by Yu BingCao(Klein) in 2025
           years · comment</span>
       </section>
